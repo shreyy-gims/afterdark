@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import dynamic from 'next/dynamic' // Required for SSR fix
 import { Navbar } from '@/components/navbar'
 import {
   Search,
@@ -16,20 +17,31 @@ import {
 } from 'lucide-react'
 
 import QRCode from 'qrcode'
-import { QrReader } from 'react-qr-reader'
 import { createClient } from '@/lib/supabase/client'
+
+// DYNAMIC IMPORT: This prevents the "window is not defined" error during deployment
+const QrReader = dynamic(
+  () => import('react-qr-reader').then((mod) => mod.QrReader),
+  { ssr: false }
+)
 
 export default function AdminDashboard() {
   const supabase = createClient()
 
+  // State
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAttendee, setSelectedAttendee] = useState<any>(null)
   const [attendees, setAttendees] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  
-  // Scanner States
   const [isScannerOpen, setIsScannerOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [hasMounted, setHasMounted] = useState(false)
+
+  // Ensure we are on the client side
+  useEffect(() => {
+    setHasMounted(true)
+    fetchTickets()
+  }, [])
 
   // ================= FETCH DATA =================
   const fetchTickets = async () => {
@@ -44,19 +56,14 @@ export default function AdminDashboard() {
     setLoading(false)
   }
 
-  useEffect(() => {
-    fetchTickets()
-  }, [])
-
   // ================= SCAN & VERIFY LOGIC =================
   const handleScanResult = async (text: string) => {
-    if (isProcessing) return // Prevent duplicate scans while processing
+    if (isProcessing || !text) return
     
     setIsProcessing(true)
     try {
       const parsed = JSON.parse(text)
       
-      // 1. Verify existence and status in Supabase
       const { data, error } = await supabase
         .from('tickets')
         .select('*')
@@ -64,30 +71,29 @@ export default function AdminDashboard() {
         .single()
 
       if (error || !data) {
-        alert('❌ Invalid Ticket: Record not found.')
+        alert('❌ Invalid Ticket: Not found in database.')
       } else if (data.used) {
-        alert(`⚠️ ALREADY USED: ${data.full_name} has already checked in.`)
+        alert(`⚠️ ALREADY USED: ${data.full_name} checked in already.`)
       } else {
-        // 2. Mark as used
         const { error: updateError } = await supabase
           .from('tickets')
           .update({ used: true })
           .eq('id', parsed.id)
 
         if (!updateError) {
-          alert(`✅ ENTRY ALLOWED: Welcome, ${data.full_name}!`)
-          fetchTickets() // Refresh the list
+          alert(`✅ ACCESS GRANTED: Welcome, ${data.full_name}!`)
+          fetchTickets() 
         }
       }
     } catch (err) {
-      alert('❌ Invalid QR Format')
+      console.error("Scan error:", err)
     } finally {
-      // Small timeout to prevent immediate re-scan of the same code
-      setTimeout(() => setIsProcessing(false), 2000)
+      // Cooldown to prevent multiple triggers from one scan
+      setTimeout(() => setIsProcessing(false), 3000)
     }
   }
 
-  // ================= OTHER ACTIONS =================
+  // ================= TICKET ACTIONS =================
   const approveTicket = async (ticket: any) => {
     const qrValue = JSON.stringify({
       id: ticket.id,
@@ -107,7 +113,7 @@ export default function AdminDashboard() {
       .eq('id', ticket.id)
 
     if (!error) {
-      alert('Ticket Approved')
+      alert('Ticket Approved & QR Generated')
       fetchTickets()
     }
   }
@@ -137,36 +143,38 @@ export default function AdminDashboard() {
       a.email?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  if (!hasMounted) return null // Prevent hydration mismatch
+
   return (
-    <main className="bg-black text-white min-h-screen">
+    <main className="bg-black text-white min-h-screen font-sans">
       <Navbar />
 
       <div className="pt-24 pb-20 px-4">
         <div className="max-w-7xl mx-auto">
           
           <div className="mb-10 text-center">
-            <h1 className="text-5xl font-black italic">ADMIN PANEL</h1>
-            <p className="text-gray-400 mt-3">Manage Tickets & QR Entry</p>
+            <h1 className="text-5xl font-black tracking-tighter italic">ADMIN PANEL</h1>
+            <p className="text-gray-400 mt-3">Event Entry & Ticket Management</p>
           </div>
 
-          {/* SCANNER SECTION */}
-          <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
+          {/* SCANNER UI */}
+          <section className="bg-zinc-900/50 border border-white/10 rounded-[2.5rem] p-8 mb-12 shadow-2xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
               <div>
-                <h2 className="text-2xl font-bold flex items-center gap-2">
-                  <QrCode className="text-blue-500" /> Live Entry Scanner
+                <h2 className="text-3xl font-bold flex items-center gap-3">
+                  <QrCode className="text-blue-500" size={32} /> Scan Station
                 </h2>
-                <p className="text-sm text-gray-400">Scan attendee QR codes for instant check-in</p>
+                <p className="text-gray-400 mt-1 text-sm">Point the camera at an attendee's QR code</p>
               </div>
               <button
                 onClick={() => setIsScannerOpen(!isScannerOpen)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all ${
+                className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black transition-all active:scale-95 ${
                   isScannerOpen 
-                    ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30' 
-                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20'
+                    ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
+                    : 'bg-blue-600 text-white shadow-xl shadow-blue-600/20'
                 }`}
               >
-                {isScannerOpen ? <><CameraOff size={20}/> Close Scanner</> : <><Camera size={20}/> Open Scanner</>}
+                {isScannerOpen ? <><CameraOff size={22}/> STOP SCANNER</> : <><Camera size={22}/> START SCANNER</>}
               </button>
             </div>
 
@@ -176,82 +184,88 @@ export default function AdminDashboard() {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
+                  className="overflow-hidden flex justify-center"
                 >
-                  <div className="relative max-w-md mx-auto aspect-square rounded-2xl border-2 border-blue-500/50 overflow-hidden bg-black">
+                  <div className="relative w-full max-w-sm aspect-square rounded-[2rem] border-4 border-blue-500/30 overflow-hidden bg-black shadow-inner">
                     <QrReader
                       constraints={{ facingMode: 'environment' }}
                       onResult={(result, error) => {
                         if (!!result) handleScanResult(result.getText())
                       }}
-                      containerStyle={{ width: '100%' }}
-                      videoStyle={{ width: '100%' }}
+                      containerStyle={{ width: '100%', height: '100%' }}
+                      videoStyle={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
-                    {/* Scanner Overlay UI */}
-                    <div className="absolute inset-0 pointer-events-none border-[40px] border-black/40">
-                       <div className="w-full h-full border-2 border-blue-400 animate-pulse flex items-center justify-center">
-                          {isProcessing && (
-                            <div className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm animate-bounce">
-                              Verifying...
-                            </div>
-                          )}
+                    {/* Viewfinder Overlay */}
+                    <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                       <div className="w-64 h-64 border-2 border-blue-400/50 rounded-3xl animate-pulse relative">
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.8)] animate-[scan_2s_linear_infinite]" />
                        </div>
                     </div>
+                    {isProcessing && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
+                        <div className="flex flex-col items-center gap-3">
+                           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                           <p className="text-blue-400 font-bold tracking-widest text-sm uppercase">Verifying Ticket</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </section>
 
-          {/* SEARCH & TABLE (Keeping your existing UI) */}
-          <div className="relative mb-6">
-            <Search className="absolute left-4 top-4 text-gray-500" />
+          {/* SEARCH BAR */}
+          <div className="relative mb-8 group">
+            <Search className="absolute left-5 top-5 text-gray-500 group-focus-within:text-blue-500 transition-colors" />
             <input
               type="text"
-              placeholder="Search by name or email..."
+              placeholder="Search by name, email or ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-blue-500 outline-none transition-colors"
+              className="w-full pl-14 pr-6 py-5 rounded-[1.5rem] bg-zinc-900/50 border border-white/10 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-lg"
             />
           </div>
 
-          <div className="overflow-x-auto rounded-3xl border border-white/10 bg-zinc-900/30">
-            <table className="w-full">
-              <thead className="bg-white/5">
-                <tr>
-                  <th className="p-4 text-left text-gray-400 font-medium">Name</th>
-                  <th className="p-4 text-left text-gray-400 font-medium">Email</th>
-                  <th className="p-4 text-left text-gray-400 font-medium">Status</th>
-                  <th className="p-4 text-left text-gray-400 font-medium">Used</th>
-                  <th className="p-4 text-right text-gray-400 font-medium">Actions</th>
+          {/* ATTENDEE TABLE */}
+          <div className="overflow-x-auto rounded-[2rem] border border-white/10 bg-zinc-900/20 backdrop-blur-md">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-white/5 border-b border-white/10">
+                  <th className="p-6 text-gray-400 font-bold uppercase text-xs tracking-widest">Attendee</th>
+                  <th className="p-6 text-gray-400 font-bold uppercase text-xs tracking-widest">Status</th>
+                  <th className="p-6 text-gray-400 font-bold uppercase text-xs tracking-widest">Entry</th>
+                  <th className="p-6 text-right text-gray-400 font-bold uppercase text-xs tracking-widest">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-white/5">
                 {filteredAttendees.map((ticket) => (
-                  <tr key={ticket.id} className="border-t border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="p-4 font-semibold">{ticket.full_name}</td>
-                    <td className="p-4 text-gray-400">{ticket.email}</td>
-                    <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-black ${
-                        ticket.status === 'approved' ? 'bg-green-500/20 text-green-400' :
-                        ticket.status === 'rejected' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
+                  <tr key={ticket.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="p-6">
+                      <div className="font-bold text-lg">{ticket.full_name}</div>
+                      <div className="text-gray-500 text-sm">{ticket.email}</div>
+                    </td>
+                    <td className="p-6">
+                      <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-tighter uppercase ${
+                        ticket.status === 'approved' ? 'bg-green-500/10 text-green-400' :
+                        ticket.status === 'rejected' ? 'bg-red-500/10 text-red-400' : 'bg-yellow-500/10 text-yellow-400'
                       }`}>
                         {ticket.status || 'pending'}
                       </span>
                     </td>
-                    <td className="p-4">
+                    <td className="p-6">
                       {ticket.used 
-                        ? <span className="text-red-400 flex items-center gap-1"><X size={14}/> Used</span> 
-                        : <span className="text-green-400 flex items-center gap-1"><Check size={14}/> Valid</span>
+                        ? <span className="bg-red-500/10 text-red-400 px-3 py-1 rounded-lg text-xs font-bold">Scanned In</span> 
+                        : <span className="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-lg text-xs font-bold">Waiting</span>
                       }
                     </td>
-                    <td className="p-4">
+                    <td className="p-6 text-right">
                       <div className="flex justify-end gap-2">
-                        <button onClick={() => setSelectedAttendee(ticket)} className="p-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20"><Eye size={18} /></button>
-                        <button onClick={() => approveTicket(ticket)} className="p-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20"><Check size={18} /></button>
-                        <button onClick={() => rejectTicket(ticket.id)} className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20"><Ban size={18} /></button>
+                        <button onClick={() => setSelectedAttendee(ticket)} className="p-3 rounded-xl bg-white/5 text-gray-300 hover:bg-blue-500/20 hover:text-blue-400 transition-all"><Eye size={20} /></button>
+                        <button onClick={() => approveTicket(ticket)} className="p-3 rounded-xl bg-white/5 text-gray-300 hover:bg-green-500/20 hover:text-green-400 transition-all"><Check size={20} /></button>
+                        <button onClick={() => rejectTicket(ticket.id)} className="p-3 rounded-xl bg-white/5 text-gray-300 hover:bg-red-500/20 hover:text-red-400 transition-all"><Ban size={20} /></button>
                         {ticket.qr_image && (
-                          <button onClick={() => downloadQR(ticket.qr_image, ticket.full_name)} className="p-2 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20"><Download size={18} /></button>
+                          <button onClick={() => downloadQR(ticket.qr_image, ticket.full_name)} className="p-3 rounded-xl bg-white/5 text-gray-300 hover:bg-purple-500/20 hover:text-purple-400 transition-all"><Download size={20} /></button>
                         )}
                       </div>
                     </td>
@@ -263,24 +277,49 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* MODAL (Existing logic) */}
+      {/* MODAL */}
       {selectedAttendee && (
-        <motion.div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setSelectedAttendee(null)}>
-          <motion.div className="bg-zinc-950 border border-white/10 rounded-[2rem] p-8 max-w-md w-full shadow-2xl" initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} onClick={(e) => e.stopPropagation()}>
-             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Attendee Info</h2>
-                <button onClick={() => setSelectedAttendee(null)} className="p-2 hover:bg-white/10 rounded-full"><X /></button>
-             </div>
-             <div className="space-y-4">
-                <div><p className="text-gray-500 text-xs uppercase tracking-widest">Name</p><p className="text-xl font-bold">{selectedAttendee.full_name}</p></div>
-                <div><p className="text-gray-500 text-xs uppercase tracking-widest">Ticket Type</p><p className="font-bold text-blue-400">{selectedAttendee.ticket_type}</p></div>
+        <motion.div 
+          className="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 z-[100]" 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          onClick={() => setSelectedAttendee(null)}
+        >
+          <motion.div 
+            className="bg-zinc-950 border border-white/10 rounded-[3rem] p-10 max-w-md w-full shadow-2xl relative" 
+            initial={{ scale: 0.9, y: 20 }} 
+            animate={{ scale: 1, y: 0 }} 
+            onClick={(e) => e.stopPropagation()}
+          >
+             <button onClick={() => setSelectedAttendee(null)} className="absolute top-6 right-6 p-2 text-gray-500 hover:text-white transition-colors"><X size={24} /></button>
+             <h2 className="text-3xl font-black mb-8 italic">TICKET DATA</h2>
+             <div className="space-y-6">
+                <div className="bg-white/5 p-4 rounded-2xl">
+                  <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">Full Name</p>
+                  <p className="text-xl font-bold">{selectedAttendee.full_name}</p>
+                </div>
+                <div className="bg-white/5 p-4 rounded-2xl">
+                  <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">Pass Type</p>
+                  <p className="text-xl font-bold text-blue-400">{selectedAttendee.ticket_type || 'Standard'}</p>
+                </div>
                 {selectedAttendee.qr_image && (
-                  <div className="bg-white p-4 rounded-3xl mt-6"><img src={selectedAttendee.qr_image} alt="QR" className="w-full aspect-square" /></div>
+                  <div className="bg-white p-6 rounded-[2rem] shadow-xl">
+                    <img src={selectedAttendee.qr_image} alt="Attendee QR" className="w-full aspect-square" />
+                  </div>
                 )}
              </div>
           </motion.div>
         </motion.div>
       )}
+
+      {/* Custom Styles for Scanner Animation */}
+      <style jsx global>{`
+        @keyframes scan {
+          0% { top: 0; }
+          50% { top: 100%; }
+          100% { top: 0; }
+        }
+      `}</style>
     </main>
   )
 }
