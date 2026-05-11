@@ -48,7 +48,7 @@ export default function VenuePage() {
               >
                 <Clock size={20} className="mx-auto mb-2 text-red-500" />
                 <p className="text-xs text-gray-400 mb-1">Open Hours</p>
-                <p className="text-sm font-bold">11 PM - 5 AM</p>
+                <p className="text-sm font-bold">11 AM - 5 PM</p>
               </motion.div>
               <motion.div
                 className="glassmorphism p-4 rounded-lg text-center"
@@ -64,7 +64,7 @@ export default function VenuePage() {
               >
                 <Wine size={20} className="mx-auto mb-2 text-red-500" />
                 <p className="text-xs text-gray-400 mb-1">Premium</p>
-                <p className="text-sm font-bold">Full Bar</p>
+                <p className="text-sm font-bold">lounge</p>
               </motion.div>
             </motion.div>
 
@@ -113,7 +113,7 @@ export default function VenuePage() {
                     </div>
                     <div>
                       <h3 className="font-bold mb-1">Time</h3>
-                      <p className="text-gray-400">June 15, 2026 • 12:00 PM - 7:00 PM</p>
+                      <p className="text-gray-400">May 14, 2026 • 11:00 AM - 5:00 PM</p>
                     </div>
                   </div>
 
@@ -185,10 +185,9 @@ export default function VenuePage() {
                 <div className="h-1 w-20 bg-gradient-to-r from-red-500 to-red-700" />
               </div>
               <p className="text-gray-300 leading-relaxed">
-                Nestled in the heart of the city, The Underground is an exclusive venue designed for
-                those who appreciate luxury and sophistication. With state-of-the-art sound systems,
-                premium cocktails, and an atmosphere that screams exclusivity, it&apos;s the perfect
-                destination for unforgettable nights.
+                This private gathering is designed to bring together a curated crowd in a comfortable and well-managed environment focused on music, social interaction, entertainment, and memorable experiences.
+                The venue setup, atmosphere, and event planning are carefully organized to create a premium and enjoyable experience for all attendees. From lighting and music to hospitality and overall ambience, every detail is planned to maintain a sophisticated and energetic environment.
+                Entry is limited and approval-based to ensure a quality crowd and smooth event experience. Guests are expected to maintain respectful behavior and follow all event guidelines throughout the gathering.
               </p>
               <p className="text-gray-300 leading-relaxed">
                 The venue features multiple levels, exclusive VIP areas, and carefully curated
@@ -197,7 +196,7 @@ export default function VenuePage() {
               </p>
               <p className="text-gray-300 leading-relaxed">
                 Dress code is strictly enforced to maintain the sophisticated atmosphere. Smart casual
-                or formal attire is required. No athletic wear, flip-flops, or casual gym clothing.
+                is required. No athletic wear, flip-flops.
               </p>
               <motion.div
                 className="bg-gradient-to-r from-red-600/20 to-red-600/5 border border-red-600/30 rounded-lg p-4 mt-6"

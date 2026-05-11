@@ -257,16 +257,88 @@ export default function Home() {
       </section>
 
       {/* ================= FOOTER ================= */}
-      <footer className="relative border-t border-white/10 bg-black py-10 text-center overflow-hidden">
+      <footer className="relative border-t border-white/10 bg-black py-14 px-6 text-center overflow-hidden">
 
-        <div className="absolute inset-0 bg-gradient-to-r from-red-950/10 via-transparent to-red-950/10" />
+  <div className="absolute inset-0 bg-gradient-to-r from-red-950/10 via-transparent to-red-950/10" />
 
-        <div className="relative z-10">
-          <p className="text-gray-500 text-sm tracking-wide">
-            © 2026 AFTERDARK SOCIETY — ALL RIGHTS RESERVED
-          </p>
-        </div>
-      </footer>
+  <div className="relative z-10 max-w-5xl mx-auto">
+
+    {/* LOGO / NAME */}
+    <h2 className="text-3xl font-black tracking-widest bg-gradient-to-r from-red-400 via-red-600 to-red-900 bg-clip-text text-transparent">
+      AFTERDARK SOCIETY
+    </h2>
+
+    <p className="text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
+      Exclusive nightlife experiences, premium private parties,
+      curated guest access and cinematic underground vibes.
+    </p>
+
+    {/* CONTACT INFO */}
+    <div className="mt-10 grid md:grid-cols-3 gap-6">
+
+      {/* INSTAGRAM */}
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5">
+        <p className="text-red-500 uppercase text-xs tracking-[0.3em] mb-2">
+          Instagram
+        </p>
+
+        <a
+          href="https://www.instagram.com/anshhhyrrrr?igsh=dmg1ZzZtMWxkeGow"
+          target="_blank"
+          className="text-white font-semibold hover:text-red-400 transition"
+        >
+          anshhhyrrrr
+        </a>
+      </div>
+
+      {/* WHATSAPP */}
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5">
+        <p className="text-red-500 uppercase text-xs tracking-[0.3em] mb-2">
+          WhatsApp
+        </p>
+
+        <a
+          href="https://wa.me/919999999999"
+          target="_blank"
+          className="text-white font-semibold hover:text-red-400 transition"
+        >
+          +91 999999999
+        </a>
+      </div>
+
+      {/* EMAIL */}
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5">
+        <p className="text-red-500 uppercase text-xs tracking-[0.3em] mb-2">
+          Email
+        </p>
+
+        <a
+          href="mailto:afterdark@gmail.com"
+          className="text-white font-semibold hover:text-red-400 transition"
+        >
+          afterdark@gmail.com
+        </a>
+      </div>
+
+    </div>
+
+    {/* COPYRIGHT */}
+    <div className="mt-12 border-t border-white/10 pt-6">
+      <p className="text-gray-700 text-xs mt-2">
+  Designed & Developed by{' '}
+  <a
+    href="https://sprightly-naiad-1b82db.netlify.app/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-red-500 hover:text-red-400 underline"
+  >
+    Anshhhh
+  </a>
+</p>
+    </div>
+
+  </div>
+</footer>
     </main>
   )
 }
