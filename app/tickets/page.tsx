@@ -185,11 +185,11 @@ import {
               </p>
 
               <h3 className="font-bold text-lg mt-1">
-                15 MAY 2026
+                14 MAY 2026
               </h3>
 
               <p className="text-gray-400 text-sm">
-                12 PM -Mid Day
+                11 AM -Mid Day
               </p>
             </div>
 
@@ -603,7 +603,7 @@ import {
               >
                 {isLoading
                   ? 'Processing...'
-                  : 'Proceed To Payment'}
+                  : 'Submit Request'}
               </button>
 
             </form>
