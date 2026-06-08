@@ -41,8 +41,8 @@ import {
   // ================= TICKET PRICES =================
   const ticketPrices = {
     early: 300,
-    regular: 300,
-    vip: 300,
+    regular: 400,
+    vip: 500,
   }
 
   const ticketPrice =
@@ -185,7 +185,7 @@ import {
               </p>
 
               <h3 className="font-bold text-lg mt-1">
-                14 MAY 2026
+                23 JUN 2026
               </h3>
 
               <p className="text-gray-400 text-sm">
@@ -238,79 +238,154 @@ import {
               <div className="grid md:grid-cols-3 gap-4">
 
                 {/* EARLY */}
-                <button
-                  type="button"
-                  onClick={() => setTicketType('early')}
-                  className={`rounded-3xl p-6 border transition-all text-left ${
-                    ticketType === 'early'
-                      ? 'border-red-500 bg-red-500/10'
-                      : 'border-white/10 bg-white/[0.03]'
-                  }`}
-                >
-                  <Zap className="text-red-500 mb-4" />
+                {/* EARLY */}
+<button
+  type="button"
+  onClick={() => setTicketType('early')}
+  className={`rounded-3xl p-6 border transition-all text-left relative overflow-hidden ${
+    ticketType === 'early'
+      ? 'border-red-500 bg-red-500/10 shadow-[0_0_40px_rgba(255,0,0,0.15)]'
+      : 'border-white/10 bg-white/[0.03]'
+  }`}
+>
+  <Zap className="text-red-500 mb-4" />
 
-                  <h3 className="text-2xl font-bold">
-                    Early Bird
-                  </h3>
+  <h3 className="text-2xl font-bold">
+    Early Bird
+  </h3>
 
-                  <p className="text-gray-400 text-sm mt-2">
-                    Limited first access
-                  </p>
+  <p className="text-gray-400 text-sm mt-2">
+    Limited first access
+  </p>
 
-                  <div className="mt-5 text-4xl font-black text-red-500">
-                    300
-                  </div>
-                </button>
+  <div className="mt-5 text-4xl font-black text-red-500">
+    ₹300
+  </div>
 
-                {/* REGULAR */}
-                <button
-                  type="button"
-                  onClick={() => setTicketType('regular')}
-                  className={`rounded-3xl p-6 border transition-all text-left ${
-                    ticketType === 'regular'
-                      ? 'border-red-500 bg-red-500/10'
-                      : 'border-white/10 bg-white/[0.03]'
-                  }`}
-                >
-                  <Ticket className="text-red-500 mb-4" />
+  {/* BENEFITS */}
+  <div className="mt-6 space-y-2 text-sm">
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Priority Entry
+    </div>
 
-                  <h3 className="text-2xl font-bold">
-                    Regular
-                  </h3>
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Access to Dance Floor
+    </div>
 
-                  <p className="text-gray-400 text-sm mt-2">
-                    Standard access
-                  </p>
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Bollywood DJ Set
+    </div>
 
-                  <div className="mt-5 text-4xl font-black text-red-500">
-                    300
-                  </div>
-                </button>
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Complimentary Glow Band
+    </div>
+  </div>
+</button>
 
-                {/* VIP */}
-                <button
-                  type="button"
-                  onClick={() => setTicketType('vip')}
-                  className={`rounded-3xl p-6 border transition-all text-left ${
-                    ticketType === 'vip'
-                      ? 'border-red-500 bg-red-500/10'
-                      : 'border-white/10 bg-white/[0.03]'
-                  }`}
-                >
-                  <Crown className="text-red-500 mb-4" />
+{/* REGULAR */}
+<button
+  type="button"
+  onClick={() => setTicketType('regular')}
+  className={`rounded-3xl p-6 border transition-all text-left relative overflow-hidden ${
+    ticketType === 'regular'
+      ? 'border-red-500 bg-red-500/10 shadow-[0_0_40px_rgba(255,0,0,0.15)]'
+      : 'border-white/10 bg-white/[0.03]'
+  }`}
+>
+  <Ticket className="text-red-500 mb-4" />
 
-                  <h3 className="text-2xl font-bold">
-                    VIP
-                  </h3>
+  <h3 className="text-2xl font-bold">
+    Regular
+  </h3>
 
-                  <p className="text-gray-400 text-sm mt-2">
-                    Premium lounge access
-                  </p>
+  <p className="text-gray-400 text-sm mt-2">
+    Standard access
+  </p>
 
-                  <div className="mt-5 text-4xl font-black text-red-500">
-                    500
-                  </div>
-                </button>
+  <div className="mt-5 text-4xl font-black text-red-500">
+    ₹400
+  </div>
+
+  {/* BENEFITS */}
+  <div className="mt-6 space-y-2 text-sm">
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Full Event Access
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Bollywood + EDM Music
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Photo Booth Access
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-green-400">✓</span>
+      Neon Wristband
+    </div>
+  </div>
+</button>
+
+{/* VIP */}
+<button
+  type="button"
+  onClick={() => setTicketType('vip')}
+  className={`rounded-3xl p-6 border transition-all text-left relative overflow-hidden ${
+    ticketType === 'vip'
+      ? 'border-yellow-500 bg-yellow-500/10 shadow-[0_0_40px_rgba(255,200,0,0.15)]'
+      : 'border-white/10 bg-white/[0.03]'
+  }`}
+>
+  <Crown className="text-yellow-400 mb-4" />
+
+  <h3 className="text-2xl font-bold">
+    VIP
+  </h3>
+
+  <p className="text-gray-400 text-sm mt-2">
+    Premium lounge access
+  </p>
+
+  <div className="mt-5 text-4xl font-black text-yellow-400">
+    ₹500
+  </div>
+
+  {/* BENEFITS */}
+  <div className="mt-6 space-y-2 text-sm">
+    <div className="flex items-center gap-2">
+      <span className="text-yellow-400">★</span>
+      VIP Fast Entry
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-yellow-400">★</span>
+      Exclusive Seating Zone
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-yellow-400">★</span>
+      Free Mocktail Included
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-yellow-400">★</span>
+      Premium Glow Kit
+    </div>
+
+    <div className="flex items-center gap-2">
+      <span className="text-yellow-400">★</span>
+      Priority Photo Access
+    </div>
+  </div>
+</button>
 
               </div>
             </div>

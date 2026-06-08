@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import Image from 'next/image'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -14,6 +13,8 @@ export function Navbar() {
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/tickets', label: 'Tickets' },
+    { href: '/calendar', label: 'Calendar' },
+    { href: '/gallery', label: 'Gallery' },
     { href: '/venue', label: 'Venue' },
     { href: '/rules', label: 'Rules' },
   ]
@@ -29,25 +30,12 @@ export function Navbar() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            
-<Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-  
-  {/* LOGO IMAGE */}
-  <div className="relative w-12 h-12">
-    <Image
-      src="/logobg.png"
-      alt="AfterDark Logo"
-      fill
-      className="object-contain group-hover:scale-110 transition-transform duration-300"
-      priority
-    />
-  </div>
-
-  {/* TEXT */}
-  <span className="text-white font-bold hidden sm:block text-sm md:text-base tracking-wide">
-   
-  </span>
-</Link>
+            <Link href="/logobg.png" className="flex items-center gap-2 group flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-red-500 to-red-700 flex items-center justify-center font-bold text-white group-hover:shadow-lg group-hover:shadow-red-600/50 transition-all">
+                Ⓐ
+              </div>
+              <span className="text-white font-bold hidden sm:block text-sm md:text-base"></span>
+            </Link>
 
             {/* Navigation items - Desktop */}
             <div className="hidden md:flex items-center gap-1">
