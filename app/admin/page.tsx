@@ -122,7 +122,7 @@ export default function AdminDashboard() {
     }
 
     // CHANGE THIS EMAIL
-    const adminEmail = 'sarpitward@gmail.com'
+    const adminEmail = 'shreyansharpitward0@gmail.com'
 
     if (session.user.email !== adminEmail) {
       router.push('/')
