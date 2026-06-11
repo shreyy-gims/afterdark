@@ -31,14 +31,14 @@ export default function CalendarPage() {
   // Mock events - Replace with real data from database
   const allEvents: Event[] = [
     {
-      date: 23,
+      date: 22,
       month: 6,
       year: 2026,
       title: 'ADS - Traditional Hours',
       time: '11:00 AM',
-      daysUntil: 23,
+      daysUntil: 13,
       venue: 'The Underground',
-      price: 500,
+      price: 400,
     },
     
   ]

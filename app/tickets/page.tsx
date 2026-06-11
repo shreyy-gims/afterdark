@@ -40,7 +40,7 @@ import {
 
   // ================= TICKET PRICES =================
   const ticketPrices = {
-    early: 300,
+    early: 350,
     regular: 400,
     vip: 500,
   }
@@ -185,7 +185,7 @@ import {
               </p>
 
               <h3 className="font-bold text-lg mt-1">
-                23 JUN 2026
+                22 JUN 2026
               </h3>
 
               <p className="text-gray-400 text-sm">
@@ -259,7 +259,7 @@ import {
   </p>
 
   <div className="mt-5 text-4xl font-black text-red-500">
-    ₹300
+    ₹350
   </div>
 
   {/* BENEFITS */}
@@ -377,7 +377,7 @@ import {
 
     <div className="flex items-center gap-2">
       <span className="text-yellow-400">★</span>
-      Premium Glow Kit
+      Upper Floor Access
     </div>
 
     <div className="flex items-center gap-2">
