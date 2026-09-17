@@ -1,344 +1,745 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import {
+  ArrowRight,
+  CalendarDays,
+  Camera,
+  ChevronRight,
+  Instagram,
+  MapPin,
+  Music2,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Zap,
+} from 'lucide-react'
+
 import { Navbar } from '@/components/navbar'
-import { Music2, ShieldCheck, Sparkles } from 'lucide-react'
+
+/* =========================================================
+   DATA
+========================================================= */
+
+const experiences = [
+  {
+    id: 'live-artists',
+    icon: Music2,
+    number: '01',
+    title: 'Live Artists',
+    description:
+      'Artists, performers and sounds that turn ordinary nights into unforgettable experiences.',
+  },
+  {
+    id: 'the-crowd',
+    icon: Users,
+    number: '02',
+    title: 'The Crowd',
+    description:
+      'Youth communities brought together through music, culture and shared experiences.',
+  },
+  {
+    id: 'experiences',
+    icon: Sparkles,
+    number: '03',
+    title: 'Experiences',
+    description:
+      'Fan zones, installations, brand activations and moments designed beyond the stage.',
+  },
+  {
+    id: 'culture',
+    icon: Camera,
+    number: '04',
+    title: 'Culture',
+    description:
+      'Events built to live beyond the venue through photos, reels, stories and memories.',
+  },
+]
+
+const upcomingEvents = [
+  {
+    id: 'arpit-bala-bhilai-2026',
+    status: 'UP NEXT',
+    title: 'REVEALING SOON..',
+    subtitle: 'LIVE IN BHILAI',
+    location: 'Bhilai, Chhattisgarh',
+    date: 'Coming Soon',
+    image: '/arpitbalablur.jpg',
+    href: '/events/artist1',
+  },
+]
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+const fadeUp = {
+  initial: {
+    opacity: 0,
+    y: 30,
+  },
+
+  whileInView: {
+    opacity: 1,
+    y: 0,
+  },
+
+  viewport: {
+    once: true,
+    amount: 0.15,
+  },
+
+  transition: {
+    duration: 0.6,
+  },
+}
+
+/* =========================================================
+   HOME PAGE
+========================================================= */
 
 export default function Home() {
-
-  // ================= COUNTDOWN =================
-  const targetDate = new Date('2026-05-15T23:59:59').getTime()
-
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  })
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date().getTime()
-      const difference = targetDate - now
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor(
-            (difference % (1000 * 60 * 60 * 24)) /
-            (1000 * 60 * 60)
-          ),
-          minutes: Math.floor(
-            (difference % (1000 * 60 * 60)) /
-            (1000 * 60)
-          ),
-          seconds: Math.floor(
-            (difference % (1000 * 60)) / 1000
-          ),
-        })
-      }
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [targetDate])
-
   return (
-    <main className="bg-black text-white overflow-x-hidden">
-      {/* NAVBAR */}
+    <main className="min-h-screen overflow-x-hidden bg-[#070707] text-white">
       <Navbar />
 
-      {/* ================= HERO SECTION ================= */}
-      <section className="relative min-h-screen w-full overflow-hidden bg-black">
+      {/* =====================================================
+          HERO
+      ===================================================== */}
 
-        {/* MAIN POSTER IMAGE */}
+      <section className="relative flex min-h-[100svh] items-end overflow-hidden">
+        {/* Background image */}
+
+        <Image
+          src="/kaosbg.jpeg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+
+        {/* Dark overlay */}
+
+        <div className="absolute inset-0 bg-black/55" />
+
+        {/* Bottom gradient */}
+
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-[#070707]" />
+
+        {/* Orange atmosphere */}
+
+        <div className="pointer-events-none absolute left-1/2 top-[-250px] h-[650px] w-[650px] -translate-x-1/2 rounded-full bg-orange-600/15 blur-[160px] sm:h-[900px] sm:w-[900px]" />
+
+        {/* Vignette */}
+
+        <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_180px_rgba(0,0,0,0.85)] md:shadow-[inset_0_0_300px_rgba(0,0,0,0.9)]" />
+
+        {/* Grid */}
+
         <div
-          className="absolute inset-0"
+          className="pointer-events-none absolute inset-0 opacity-[0.025]"
           style={{
-            backgroundImage: "url('/abc.png')",
-            backgroundSize: 'contain',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px)',
+            backgroundSize: '70px 70px',
           }}
         />
 
-        {/* DARK CINEMATIC OVERLAY */}
-        <div className="absolute inset-0 bg-black/55" />
+        {/* Hero content */}
 
-        {/* RED ATMOSPHERIC GLOW */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.18),transparent_60%)]" />
-
-        {/* TOP RED LIGHT */}
-        <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-red-700/20 blur-[180px] rounded-full" />
-
-        {/* SIDE DARK VIGNETTE */}
-        <div className="absolute inset-0 shadow-[inset_0_0_250px_rgba(0,0,0,0.95)]" />
-
-        {/* BOTTOM BLACK FADE */}
-        <div className="absolute bottom-0 left-0 w-full h-60 bg-gradient-to-t from-black via-black/90 to-transparent" />
-
-        {/* FLOATING RED PARTICLES */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-[15%] left-[20%] w-2 h-2 bg-red-500 rounded-full blur-sm animate-pulse" />
-          <div className="absolute top-[30%] right-[18%] w-3 h-3 bg-red-600 rounded-full blur-md animate-pulse" />
-          <div className="absolute bottom-[25%] left-[30%] w-2 h-2 bg-red-400 rounded-full blur-sm animate-pulse" />
-          <div className="absolute bottom-[40%] right-[25%] w-4 h-4 bg-red-700 rounded-full blur-lg animate-pulse" />
-        </div>
-
-        {/* HERO CONTENT */}
-        <div className="relative z-20 flex items-end justify-center min-h-screen px-6 pb-24">
+        <div className="relative z-10 mx-auto w-full max-w-[1500px] px-5 pb-16 pt-32 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
           <motion.div
-            initial={{ opacity: 0, y: 80 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="text-center max-w-4xl"
+            initial={{
+              opacity: 0,
+              y: 40,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.8,
+            }}
+            className="max-w-6xl"
           >
+            {/* Small label */}
 
-            {/* SMALL LABEL */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mb-5"
-            >
-              <span className="border border-red-500/40 bg-red-500/10 backdrop-blur-md px-5 py-2 rounded-full text-xs tracking-[0.4em] uppercase text-red-400">
-                Forbidden Nights
-              </span>
-            </motion.div>
+            <div className="mb-6 flex items-center gap-3">
+              <div className="h-[1px] w-8 bg-orange-500 sm:w-12" />
 
-            {/* MAIN TITLE */}
-            <motion.h1
-              className="text-6xl md:text-8xl font-black uppercase leading-none"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.15)]">
-                AFTERDARK
-              </span>
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-orange-500 sm:text-xs">
+                Culture × Crowd × Kaos
+              </p>
+            </div>
 
-              <span className="block bg-gradient-to-b from-red-400 via-red-600 to-red-900 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,0,0,0.4)]">
-                SOCIETY
-              </span>
-            </motion.h1>
+            {/* Brand */}
 
-            {/* DESCRIPTION */}
-            <motion.p
-              className="mt-8 text-gray-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              Some nights should never be explained
-            </motion.p>
+            <h1 className="text-[23vw] font-black leading-[0.72] tracking-[-0.075em] sm:text-[17vw] lg:text-[13rem] xl:text-[15rem]">
+              D<span className="text-orange-500">KAOS</span>
+            </h1>
 
+            {/* Bottom content */}
 
-            {/* CTA BUTTONS */}
-            <motion.div
-              className="flex flex-col sm:flex-row items-center justify-center gap-5 mt-12"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <Link
-                href="/tickets"
-                className="px-10 py-4 rounded-2xl bg-red-600 hover:bg-red-700 transition-all font-bold text-white shadow-[0_0_40px_rgba(255,0,0,0.45)]"
-              >
-                Reserve Access
-              </Link>
+            <div className="mt-9 flex flex-col gap-8 lg:mt-12 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h2 className="max-w-3xl text-3xl font-black leading-[0.95] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                  WE CREATE
+                  <br />
 
-              <Link
-                href="/venue"
-                className="px-10 py-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all font-semibold"
-              >
-                Explore Venue
-              </Link>
-            </motion.div>
-            
+                  <span className="text-white/35">
+                    MOMENTS THAT STAY.
+                  </span>
+                </h2>
+
+                <p className="mt-5 max-w-xl text-sm leading-6 text-white/55 sm:text-base sm:leading-7">
+                  Concerts, youth culture and unforgettable live experiences
+                  built in Chhattisgarh.
+                </p>
+              </div>
+
+              {/* CTA buttons */}
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/events"
+                  className="group flex items-center justify-center gap-3 rounded-full bg-orange-500 px-7 py-4 text-sm font-bold text-black transition-all duration-300 hover:bg-orange-400"
+                >
+                  Explore Events
+
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+
+                <Link
+                  href="/sponsors"
+                  className="group flex items-center justify-center gap-3 rounded-full border border-white/15 bg-black/20 px-7 py-4 text-sm font-semibold text-white backdrop-blur-xl transition-all duration-300 hover:bg-white/10"
+                >
+                  Partner With Us
+
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ================= FEATURES SECTION ================= */}
-      <section className="relative py-28 px-6 bg-black overflow-hidden">
+      {/* =====================================================
+          INTRODUCTION
+      ===================================================== */}
 
-        {/* RED BACKGROUND LIGHT */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-red-700/10 blur-[150px] rounded-full" />
-
-        <div className="relative z-10 max-w-7xl mx-auto">
-
-          {/* SECTION TITLE */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <p className="text-red-500 uppercase tracking-[0.3em] text-sm mb-4">
-              Experience
+      <section className="relative border-t border-white/[0.06] px-5 py-20 sm:px-8 sm:py-28 lg:px-12 lg:py-36">
+        <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+          <motion.div {...fadeUp}>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+              Who We Are
             </p>
-
-            <h2 className="text-5xl md:text-6xl font-black">
-              WHY ATTEND?
-            </h2>
           </motion.div>
 
-          {/* FEATURE CARDS */}
-          <div className="grid md:grid-cols-3 gap-8">
+          <motion.div {...fadeUp}>
+            <h2 className="max-w-5xl text-4xl font-black leading-[1] tracking-[-0.045em] sm:text-5xl lg:text-7xl">
+              NOT ANOTHER
+              <br />
+              EVENT COMPANY.
+              <br />
 
-            {/* CARD 1 */}
-            <motion.div
-              whileHover={{
-                y: -10,
-                scale: 1.02,
-              }}
-              className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-10"
+              <span className="text-white/25">
+                A CULTURE IN MOTION.
+              </span>
+            </h2>
+
+            <div className="mt-10 grid gap-8 border-t border-white/10 pt-8 md:grid-cols-2">
+              <p className="text-sm leading-7 text-white/50 sm:text-base">
+                DKAOS creates live experiences where music, people, creators
+                and culture collide. Every event is designed around energy,
+                community and moments worth remembering.
+              </p>
+
+              <p className="text-sm leading-7 text-white/50 sm:text-base">
+                From intimate youth experiences to large-format concerts, our
+                goal is simple — give Chhattisgarh experiences people usually
+                travel to bigger cities to find.
+              </p>
+            </div>
+
+            <Link
+              href="/about"
+              className="group mt-9 inline-flex items-center gap-3 border-b border-orange-500 pb-2 text-sm font-bold text-white"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent opacity-60" />
+              Discover DKAOS
 
-              <Sparkles className="relative z-10 w-14 h-14 text-red-500 mb-8" />
+              <ArrowRight
+                size={16}
+                className="text-orange-500 transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
 
-              <h3 className="relative z-10 text-3xl font-bold mb-5">
-                Elite Atmosphere
+      {/* =====================================================
+          UP NEXT
+      ===================================================== */}
+
+      <section className="px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+        <div className="mx-auto max-w-[1400px]">
+          {/* Header */}
+
+          <motion.div
+            {...fadeUp}
+            className="mb-10 flex items-end justify-between"
+          >
+            <div>
+              <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+                Upcoming
+              </p>
+
+              <h2 className="text-4xl font-black tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                UP NEXT.
+              </h2>
+            </div>
+
+            <Link
+              href="/events"
+              className="hidden items-center gap-2 text-sm text-white/50 transition hover:text-white sm:flex"
+            >
+              All Events
+              <ArrowRight size={16} />
+            </Link>
+          </motion.div>
+
+          {/* Events */}
+
+          <div className="space-y-8">
+  {upcomingEvents.map((event) => {
+    return (
+      <div key={event.id}>
+        <motion.article
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.6 }}
+          className="group relative min-h-[540px] overflow-hidden rounded-[28px] border border-white/10 sm:min-h-[620px] lg:min-h-[650px] lg:rounded-[40px]"
+        >
+          <Image
+            src={event.image}
+            alt={`${event.title} ${event.subtitle}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 1400px"
+            className="object-cover object-center transition-transform duration-[1500ms] group-hover:scale-[1.03]"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/15" />
+
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/10 to-transparent" />
+
+          <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 lg:p-14">
+            <div>
+              <span className="inline-flex rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-orange-400 backdrop-blur-xl">
+                {event.status}
+              </span>
+            </div>
+
+            <div>
+              <h3 className="break-words text-[15vw] font-black leading-[0.78] tracking-[-0.06em] sm:text-7xl lg:text-8xl xl:text-9xl">
+                {event.title}
               </h3>
 
-              <p className="relative z-10 text-gray-400 leading-relaxed">
-                A carefully curated crowd, immersive lighting, hidden
-                experiences and unforgettable energy.
+              <p className="mt-4 text-base font-bold tracking-[0.18em] text-white/55 sm:text-2xl sm:tracking-[0.22em]">
+                {event.subtitle}
               </p>
-            </motion.div>
 
-            {/* CARD 2 */}
-            <motion.div
-              whileHover={{
-                y: -10,
-                scale: 1.02,
-              }}
-              className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-10"
+              <div className="mt-8 flex flex-col gap-3 text-sm text-white/60 sm:flex-row sm:flex-wrap sm:gap-7">
+                <div className="flex items-center gap-2">
+                  <MapPin
+                    size={16}
+                    className="shrink-0 text-orange-500"
+                  />
+
+                  <span>{event.location}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <CalendarDays
+                    size={16}
+                    className="shrink-0 text-orange-500"
+                  />
+
+                  <span>{event.date}</span>
+                </div>
+              </div>
+
+              <Link
+                href={event.href}
+                className="group/button mt-9 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.08] px-6 py-3.5 text-sm font-semibold backdrop-blur-xl transition-all hover:bg-white hover:text-black"
+              >
+                <span>View Event</span>
+
+                <ArrowRight
+                  size={16}
+                  className="transition-transform duration-300 group-hover/button:translate-x-1"
+                />
+              </Link>
+            </div>
+          </div>
+        </motion.article>
+      </div>
+    )
+  })}
+</div>
+
+          {/* Mobile all events */}
+
+          <Link
+            href="/events"
+            className="mt-6 flex items-center justify-between border-b border-white/10 py-4 text-sm text-white/60 sm:hidden"
+          >
+            Explore All Events
+
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* =====================================================
+          EXPERIENCE
+      ===================================================== */}
+
+      <section className="border-y border-white/[0.06] bg-[#0a0a0a] px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+        <div className="grid border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
+  {experiences.map((experience, index) => {
+    const Icon = experience.icon
+
+    return (
+      <div
+        key={experience.id}
+        className="border-b border-r border-white/10"
+      >
+        <motion.article
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          transition={{
+            duration: 0.6,
+            delay: index * 0.08,
+          }}
+          className="group relative min-h-[290px] p-7 transition-colors duration-300 hover:bg-white/[0.025] lg:min-h-[340px] lg:p-8"
+        >
+          <div className="flex items-start justify-between">
+            <Icon
+              size={27}
+              strokeWidth={1.5}
+              className="text-orange-500"
+            />
+
+            <span className="text-xs font-bold text-white/20">
+              {experience.number}
+            </span>
+          </div>
+
+          <div className="mt-16 lg:mt-28">
+            <h3 className="text-2xl font-bold tracking-tight">
+              {experience.title}
+            </h3>
+
+            <p className="mt-4 text-sm leading-6 text-white/40">
+              {experience.description}
+            </p>
+          </div>
+        </motion.article>
+      </div>
+    )
+  })}
+</div>
+      </section>
+
+      {/* =====================================================
+          ABOUT CTA
+      ===================================================== */}
+
+      <section className="px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+        <motion.div
+          {...fadeUp}
+          className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[30px] border border-white/10 bg-[#101010] p-7 sm:p-12 lg:p-16"
+        >
+          {/* Glow */}
+
+          <div className="pointer-events-none absolute -right-24 -top-24 h-[350px] w-[350px] rounded-full bg-orange-600/10 blur-[120px]" />
+
+          {/* Background K */}
+
+          <div className="pointer-events-none absolute -bottom-20 right-5 select-none text-[250px] font-black leading-none tracking-[-0.08em] text-white/[0.02]">
+            K
+          </div>
+
+          <div className="relative z-10 flex flex-col justify-between gap-12 lg:flex-row lg:items-end">
+            <div>
+              <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-full border border-orange-500/20 bg-orange-500/10">
+                <Zap
+                  size={21}
+                  className="text-orange-500"
+                />
+              </div>
+
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+                Inside DKAOS
+              </p>
+
+              <h2 className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                NOT JUST EVENTS.
+                <br />
+
+                <span className="text-white/25">
+                  WE&apos;RE BUILDING CULTURE.
+                </span>
+              </h2>
+
+              <p className="mt-7 max-w-xl text-sm leading-7 text-white/45 sm:text-base">
+                Born in Bhilai and built around music, youth culture and
+                unforgettable experiences. Discover the idea and vision behind
+                DKAOS.
+              </p>
+            </div>
+
+            <Link
+              href="/about"
+              className="group flex w-fit items-center gap-4 rounded-full bg-white px-6 py-3.5 text-sm font-bold text-black transition-all duration-300 hover:bg-orange-500"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent opacity-60" />
+              About DKAOS
 
-              <ShieldCheck className="relative z-10 w-14 h-14 text-red-500 mb-8" />
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </div>
+        </motion.div>
+      </section>
 
-              <h3 className="relative z-10 text-3xl font-bold mb-5">
-                Private Entry
-              </h3>
+      {/* =====================================================
+          SPONSORS
+      ===================================================== */}
 
-              <p className="relative z-10 text-gray-400 leading-relaxed">
-                Secure QR verification system with smooth premium access
-                experience for all guests.
+      <section className="px-5 pb-24 pt-8 sm:px-8 sm:pb-32 lg:px-12">
+        <div className="mx-auto max-w-[1400px]">
+          <motion.div
+            {...fadeUp}
+            className="grid gap-12 border-t border-white/10 pt-16 lg:grid-cols-2 lg:gap-20"
+          >
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+                Brands × DKAOS
               </p>
-            </motion.div>
 
-            {/* CARD 3 */}
-            <motion.div
-              whileHover={{
-                y: -10,
-                scale: 1.02,
-              }}
-              className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-10"
+              <h2 className="mt-5 text-4xl font-black leading-[0.95] tracking-[-0.04em] sm:text-5xl lg:text-7xl">
+                BUILD CULTURE
+                <br />
+
+                <span className="text-white/25">
+                  WITH US.
+                </span>
+              </h2>
+            </div>
+
+            <div className="flex flex-col justify-end">
+              <p className="max-w-xl text-sm leading-7 text-white/50 sm:text-base">
+                We collaborate with brands through event sponsorships, digital
+                campaigns, LED visibility, experience stalls, audience
+                activations, category partnerships and strategic barter
+                collaborations.
+              </p>
+
+              <Link
+                href="/sponsors"
+                className="group mt-8 flex w-fit items-center gap-3 border-b border-orange-500 pb-2 text-sm font-bold"
+              >
+                Explore Partnerships
+
+                <ArrowRight
+                  size={16}
+                  className="text-orange-500 transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* =====================================================
+          RULES / SAFETY
+      ===================================================== */}
+
+      <section className="border-y border-white/[0.06] bg-[#0a0a0a] px-5 py-20 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-[1400px]">
+          <motion.div
+            {...fadeUp}
+            className="flex flex-col justify-between gap-10 md:flex-row md:items-center"
+          >
+            <div className="flex gap-5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04]">
+                <ShieldCheck
+                  size={22}
+                  className="text-orange-500"
+                />
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-bold sm:text-3xl">
+                  Good Kaos. Safe Kaos.
+                </h2>
+
+                <p className="mt-2 max-w-xl text-sm leading-6 text-white/40">
+                  Every DKAOS event follows its own entry, safety, venue and
+                  conduct policies. Know them before attending.
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/rules"
+              className="group flex items-center gap-3 text-sm font-semibold text-white/70 transition hover:text-orange-500"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent opacity-60" />
+              Read Event Rules
 
-              <Music2 className="relative z-10 w-14 h-14 text-red-500 mb-8" />
+              <ChevronRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
 
-              <h3 className="relative z-10 text-3xl font-bold mb-5">
-                Midnight Vibes
-              </h3>
+      {/* =====================================================
+          FOOTER
+      ===================================================== */}
 
-              <p className="relative z-10 text-gray-400 leading-relaxed">
-                Underground DJs, luxury cocktails, immersive sound and
-                cinematic nightlife visuals.
+      <footer className="relative overflow-hidden bg-[#050505] px-5 pb-8 pt-20 sm:px-8 sm:pt-28 lg:px-12">
+        {/* Footer glow */}
+
+        <div className="pointer-events-none absolute bottom-[-200px] left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-orange-700/[0.06] blur-[160px]" />
+
+        <div className="relative z-10 mx-auto max-w-[1400px]">
+          <div className="grid gap-14 lg:grid-cols-[1.5fr_1fr]">
+            {/* Brand */}
+
+            <div>
+              <p className="text-[19vw] font-black leading-[0.7] tracking-[-0.07em] text-white sm:text-[15vw] lg:text-[9rem]">
+                D<span className="text-orange-500">KAOS</span>
               </p>
-            </motion.div>
+
+              <p className="mt-8 max-w-md text-sm leading-6 text-white/40">
+                Music. Culture. Crowd.
+                <br />
+                Built in Chhattisgarh.
+              </p>
+            </div>
+
+            {/* Footer navigation */}
+
+            <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
+              {/* Explore */}
+
+              <div>
+                <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.25em] text-white/25">
+                  Explore
+                </p>
+
+                <div className="flex flex-col gap-3 text-sm">
+                  <Link
+                    href="/"
+                    className="text-white/60 transition hover:text-white"
+                  >
+                    Home
+                  </Link>
+
+                  <Link
+                    href="/events"
+                    className="text-white/60 transition hover:text-white"
+                  >
+                    Events
+                  </Link>
+
+                  <Link
+                    href="/about"
+                    className="text-white/60 transition hover:text-white"
+                  >
+                    About
+                  </Link>
+                </div>
+              </div>
+
+              {/* DKAOS */}
+
+              <div>
+                <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.25em] text-white/25">
+                  DKAOS
+                </p>
+
+                <div className="flex flex-col gap-3 text-sm">
+                  <Link
+                    href="/sponsors"
+                    className="text-white/60 transition hover:text-white"
+                  >
+                    Sponsors
+                  </Link>
+
+                  <Link
+                    href="/rules"
+                    className="text-white/60 transition hover:text-white"
+                  >
+                    Rules
+                  </Link>
+                </div>
+              </div>
+
+              {/* Social */}
+
+              <div>
+                <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.25em] text-white/25">
+                  Social
+                </p>
+
+                <a
+                  href="https://www.instagram.com/da.ka0s"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm text-white/60 transition hover:text-orange-500"
+                >
+                  <Instagram size={15} />
+
+                  @da.ka0s
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer bottom */}
+
+          <div className="mt-20 flex flex-col gap-4 border-t border-white/10 pt-7 text-[11px] text-white/25 sm:flex-row sm:items-center sm:justify-between">
+            <p>© 2026 DKAOS. All rights reserved.</p>
+
+            <p>Culture × Crowd × Kaos</p>
           </div>
         </div>
-      </section>
-
-      {/* ================= FOOTER ================= */}
-      <footer className="relative border-t border-white/10 bg-black py-14 px-6 text-center overflow-hidden">
-
-  <div className="absolute inset-0 bg-gradient-to-r from-red-950/10 via-transparent to-red-950/10" />
-
-  <div className="relative z-10 max-w-5xl mx-auto">
-
-    {/* LOGO / NAME */}
-    <h2 className="text-3xl font-black tracking-widest bg-gradient-to-r from-red-400 via-red-600 to-red-900 bg-clip-text text-transparent">
-      AFTERDARK SOCIETY
-    </h2>
-
-    <p className="text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
-      Exclusive nightlife experiences, premium private parties,
-      curated guest access and cinematic underground vibes.
-    </p>
-
-    {/* CONTACT INFO */}
-    <div className="mt-10 grid md:grid-cols-3 gap-6">
-
-      {/* INSTAGRAM */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5">
-        <p className="text-red-500 uppercase text-xs tracking-[0.3em] mb-2">
-          Instagram
-        </p>
-
-        <a
-          href="https://www.instagram.com/anshhhyrrrr?igsh=dmg1ZzZtMWxkeGow"
-          target="_blank"
-          className="text-white font-semibold hover:text-red-400 transition"
-        >
-          anshhhyrrrr
-        </a>
-      </div>
-
-      {/* WHATSAPP */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5">
-        <p className="text-red-500 uppercase text-xs tracking-[0.3em] mb-2">
-          WhatsApp
-        </p>
-
-        <a
-          href="https://wa.me/919999999999"
-          target="_blank"
-          className="text-white font-semibold hover:text-red-400 transition"
-        >
-          +91 93479336
-        </a>
-      </div>
-
-      {/* EMAIL */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5">
-        <p className="text-red-500 uppercase text-xs tracking-[0.3em] mb-2">
-          Email
-        </p>
-
-        <a
-          href="mailto:afterdark@gmail.com"
-          className="text-white font-semibold hover:text-red-400 transition"
-        >
-          afterdark@gmail.com
-        </a>
-      </div>
-
-    </div>
-
-    {/* COPYRIGHT */}
-    <div className="mt-12 border-t border-white/10 pt-6">
-      <p className="text-gray-700 text-xs mt-2">
-  Designed & Developed by{' '}
-  <a
-    href="https://sprightly-naiad-1b82db.netlify.app/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-red-500 hover:text-red-400 underline"
-  >
-    Anshhhh
-  </a>
-</p>
-    </div>
-
-  </div>
-</footer>
+      </footer>
     </main>
   )
 }

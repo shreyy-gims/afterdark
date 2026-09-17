@@ -7,25 +7,25 @@ const geist = Geist({ subsets: ["latin"], variable: '--font-geist' });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-geist-mono' });
 
 export const metadata: Metadata = {
-  title: 'AfterDark Society - Exclusive Events',
-  description: 'Premium event ticketing platform for exclusive after-hours experiences',
+  title: 'DKAOS - Exclusive Events',
+  description: 'Premium event ticketing platform for exclusive chaotic experiences',
   generator: 'v0.app',
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
+        url: '/ssfsdf.jpeg',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/icon-dark-32x32.png',
+        url: '/ssfsdf.jpeg',
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/icon.svg',
+        url: '/ssfsdf.jpeg',
         type: 'image/svg+xml',
       },
     ],
-    apple: '/apple-icon.png',
+    apple: '/ssfsdf.jpeg',
   },
 }
 
