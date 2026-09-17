@@ -164,7 +164,8 @@ export default function ArtistOnePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(true)
+  const [isMuted, setIsMuted] = useState(false)
+  const [needsSoundInteraction, setNeedsSoundInteraction] = useState(false)
 
   /* =========================================================
      SCROLL PROGRESS
@@ -250,21 +251,94 @@ export default function ArtistOnePage() {
   ========================================================= */
 
   useEffect(() => {
-    const video = videoRef.current
+  const video = videoRef.current
 
-    if (!video) return
+  if (!video) return
 
-    video.muted = true
+  const startVideo = async () => {
+    try {
+      // Try sound autoplay first
+      video.muted = false
+      video.volume = 1
 
-    video
-      .play()
-      .then(() => {
+      await video.play()
+
+      setIsPlaying(true)
+      setIsMuted(false)
+      setNeedsSoundInteraction(false)
+    } catch {
+      // Browser blocked sound autoplay.
+      // Continue the cinematic video muted.
+      video.muted = true
+
+      try {
+        await video.play()
+
         setIsPlaying(true)
-      })
-      .catch(() => {
+        setIsMuted(true)
+        setNeedsSoundInteraction(true)
+      } catch {
         setIsPlaying(false)
-      })
-  }, [])
+        setNeedsSoundInteraction(true)
+      }
+    }
+  }
+
+  startVideo()
+}, [])
+
+const enterWithSound = async () => {
+  const video = videoRef.current
+
+  if (!video) return
+
+  video.muted = false
+  video.volume = 1
+
+  try {
+    await video.play()
+
+    setIsMuted(false)
+    setIsPlaying(true)
+    setNeedsSoundInteraction(false)
+  } catch {
+    setIsPlaying(false)
+  }
+}
+  
+  useEffect(() => {
+  const video = videoRef.current
+
+  if (!video) return
+
+  const startVideo = async () => {
+    try {
+      // First try autoplay WITH sound
+      video.muted = false
+      video.volume = 1
+
+      await video.play()
+
+      setIsPlaying(true)
+      setIsMuted(false)
+    } catch {
+      // Browser blocked autoplay with audio.
+      // Fall back to muted autoplay.
+      video.muted = true
+
+      try {
+        await video.play()
+
+        setIsPlaying(true)
+        setIsMuted(true)
+      } catch {
+        setIsPlaying(false)
+      }
+    }
+  }
+
+  startVideo()
+}, [])
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on(
@@ -355,6 +429,44 @@ export default function ArtistOnePage() {
         className="relative h-[260svh] bg-black"
       >
         <div className="sticky top-0 h-[100svh] overflow-hidden bg-black">
+
+          {needsSoundInteraction && (
+  <motion.button
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    type="button"
+    onClick={enterWithSound}
+    className="
+      absolute
+      left-1/2
+      top-1/2
+      z-[100]
+      -translate-x-1/2
+      -translate-y-1/2
+      rounded-full
+      border
+      border-white/20
+      bg-black/50
+      px-6
+      py-4
+      text-xs
+      font-black
+      uppercase
+      tracking-[0.22em]
+      text-white
+      backdrop-blur-xl
+      transition
+      hover:border-orange-500/50
+      hover:bg-orange-500
+      hover:text-black
+    "
+  >
+    <span className="flex items-center gap-3">
+      <Volume2 size={17} />
+      Enter With Sound
+    </span>
+  </motion.button>
+)}
           {/* ================================================
               VIDEO
           ================================================= */}
@@ -367,24 +479,22 @@ export default function ArtistOnePage() {
             className="absolute inset-0"
           >
             <video
-              ref={videoRef}
-              src="/videos/arpit.mp4"
-              autoPlay
-              muted
-              playsInline
-              loop
-              preload="metadata"
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              className="
-                h-full
-                w-full
-                object-cover
-                object-center
-
-                max-sm:object-[50%_center]
-              "
-            />
+  ref={videoRef}
+  src="/videos/arpit.mp4"
+  autoPlay
+  playsInline
+  loop
+  preload="metadata"
+  onPlay={() => setIsPlaying(true)}
+  onPause={() => setIsPlaying(false)}
+  className="
+    h-full
+    w-full
+    object-cover
+    object-center
+    max-sm:object-[50%_center]
+  "
+/>
           </motion.div>
 
           {/* ================================================

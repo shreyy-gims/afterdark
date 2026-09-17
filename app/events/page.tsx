@@ -94,7 +94,21 @@ const pastEvents: Event[] = [
     href: '/events/noctra',
     status: 'PAST',
     year: '2026',
-  }
+  },
+
+  {
+    id: 2,
+    title: 'CL7 MEDIA TEAM',
+    subtitle: 'DKAOS EXPERIENCE',
+    description: '...',
+    location: 'Bhilai, Chhattisgarh',
+    venue: '...',
+    date: '31 MARCH 2026',
+    image: '/raftaar.jpeg',
+    href: '/events/cl6',
+    status: 'PAST',
+    year: '2026',
+  },
 
 
 ]

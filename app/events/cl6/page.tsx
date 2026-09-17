@@ -79,46 +79,34 @@ const eventDetails = [
   const media = [
   {
     id: 'spiderverse-01',
-    src: '/1.jpg',
+    src: '/raf1.jpeg',
     alt: 'Spiderverse event crowd',
     type: 'photo',
     size: 'large',
   },
   {
     id: 'spiderverse-02',
-    src: '/2.jpg',
+    src: '/raf2.jpeg',
     alt: 'Spiderverse live event',
     type: 'photo',
     size: 'normal',
   },
   {
     id: 'spiderverse-03',
-    src: '/3.jpg',
+    src: '/raf3.jpeg',
     alt: 'Spiderverse stage',
     type: 'photo',
     size: 'normal',
   },
   {
     id: 'spiderverse-04',
-    src: '/4.jpg',
+    src: '/raf4.jpeg',
     alt: 'Spiderverse atmosphere',
     type: 'photo',
     size: 'tall',
   },
-  {
-    id: 'spiderverse-05',
-    src: '/5.jpg',
-    alt: 'Spiderverse crowd',
-    type: 'photo',
-    size: 'normal',
-  },
-  {
-    id: 'spiderverse-06',
-    src: '/6.jpg',
-    alt: 'Spiderverse memories',
-    type: 'photo',
-    size: 'normal',
-  },
+   
+  
 ]
   
 
@@ -419,7 +407,7 @@ useEffect(() => {
           >
             <video
               ref={videoRef}
-              src="/videos/spider.mp4"
+              src="/videos/raftaar.mp4"
               autoPlay
               muted
               playsInline
@@ -505,9 +493,9 @@ useEffect(() => {
               {/* TITLE */}
 
               <h1 className="max-w-6xl text-[14vw] font-black leading-[0.78] tracking-[-0.065em] sm:text-[10vw] lg:text-[7rem] xl:text-[8.5rem]">
-                SPIDER
+                CL7 MEDIA
                 <span className="block text-orange-500">
-                  VERSE.
+                  WORK
                 </span>
               </h1>
 
