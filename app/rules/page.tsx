@@ -355,7 +355,7 @@ export default function RulesPage() {
 
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <Link
-                href="/tickets"
+                href="/events"
                 onClick={(e) => {
                   if (!agreed) e.preventDefault()
                 }}
@@ -371,7 +371,7 @@ export default function RulesPage() {
               </Link>
 
               <Link
-                href="/"
+                href="/events"
                 className="flex min-h-14 flex-1 items-center justify-between border border-white/10 px-5 text-sm font-bold uppercase tracking-[0.12em] text-zinc-300 transition-colors hover:bg-white/5"
               >
                 <span className="flex items-center gap-2">

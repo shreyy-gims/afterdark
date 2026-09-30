@@ -337,7 +337,7 @@ export default function GalleryPage() {
             <p className="text-gray-300 max-w-2xl mx-auto">
               Book your tickets for our upcoming events and create unforgettable memories with us
             </p>
-            <Link href="/tickets">
+            <Link href="/events">
               <motion.button
                 className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all inline-block"
                 whileHover={{ scale: 1.05 }}

@@ -20,7 +20,7 @@ export function HeroSection({ eventDate, onTicketClick, backgroundImage }: HeroS
     if (onTicketClick) {
       onTicketClick()
     } else {
-      router.push('/tickets')
+      router.push('/events')
     }
   }
 

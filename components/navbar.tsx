@@ -392,17 +392,41 @@ export function Navbar() {
 
                 <div className="flex items-end justify-between">
 
-                  <div>
+                  {/* Footer bottom */}
 
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-white/25">
-                      Culture × Crowd × Kaos
-                    </p>
+<div className="mt-20 flex flex-col gap-5 border-t border-white/10 pt-7 text-[11px] text-white/25 sm:flex-row sm:items-center sm:justify-between">
 
-                    <p className="mt-2 text-xs text-white/40">
-                      Bhilai • Chhattisgarh
-                    </p>
+  {/* Copyright */}
+  <p>© 2026 DKAOS. All rights reserved.</p>
 
-                  </div>
+  {/* Right side */}
+  <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+
+    <p>Culture × Crowd × Kaos</p>
+
+    <span className="hidden h-3 w-px bg-white/15 sm:block" />
+
+    <a
+      href="https://anshhh-inky.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group inline-flex items-center gap-1.5 text-white/35 transition-colors duration-300 hover:text-orange-500"
+    >
+      <span>Developed by</span>
+
+      <span className="font-semibold text-white/60 transition-colors duration-300 group-hover:text-orange-500">
+        anshhh
+      </span>
+
+      <ArrowUpRight
+        size={12}
+        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+      />
+    </a>
+
+  </div>
+
+</div>
 
                   <span className="text-xs font-bold text-white/20">
                     © DKAOS

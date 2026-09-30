@@ -43,7 +43,7 @@ type Event = {
 
 const featuredEvent: Event = {
   id: 1,
-  title: 'Revealing Soon',
+  title: ' ',
   subtitle: 'LIVE IN BHILAI',
   description:
     'DKAOS brings a new live music experience to Bhilai. Music, culture, crowd energy and a night built to be remembered.',
@@ -51,7 +51,7 @@ const featuredEvent: Event = {
   venue: 'Venue Revealing Soon',
   date: 'Coming Soon',
   time: 'To Be Announced',
-  image: '/arpitbalablur.jpg',
+  image: '/brownrangpic.jpeg',
   href: '/events/artist1',
   status: 'UP NEXT',
   year: '2026',

@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react'
 
+import Image from 'next/image'
 import Link from 'next/link'
 
 import {
@@ -19,119 +20,70 @@ import {
   ArrowLeft,
   ArrowRight,
   CalendarDays,
-  Camera,
-  Headphones,
+  Expand,
   Instagram,
   MapPin,
-  Mic2,
-  Music2,
   Pause,
   Play,
-  ShieldCheck,
   Sparkles,
   Users,
   Volume2,
   VolumeX,
-  Zap,
+  X,
 } from 'lucide-react'
 
 import { Navbar } from '@/components/navbar'
 
 /* =========================================================
-   DATA
+   EVENT DATA
 ========================================================= */
 
-const highlights = [
+const eventDetails = [
   {
-    id: 'monthly-listeners',
-    icon: Headphones,
-    value: '2.8M+',
-    label: 'Monthly Listeners',
+    id: 'date',
+    icon: CalendarDays,
+    label: 'Date',
+    value: 'Revealing Soon',
   },
   {
-    id: 'catalog-streams',
-    icon: Music2,
-    value: '343M+',
-    label: 'Catalog Streams',
+    id: 'location',
+    icon: MapPin,
+    label: 'Venue',
+    value: 'Revealing Soon',
   },
   {
-    id: 'spotify-followers',
-    icon: Users,
-    value: '360K+',
-    label: 'Spotify Followers',
-  },
-]
-
-const tracks = [
-  {
-    id: 'bargad',
-    number: '01',
-    title: 'Bargad',
-  },
-  {
-    id: 'maharani',
-    number: '02',
-    title: 'Maharani',
-  },
-  {
-    id: 'ik-kudi',
-    number: '03',
-    title: 'Ik Kudi',
-  },
-  {
-    id: 'rakhlo-tum-chupaake',
-    number: '04',
-    title: 'Rakhlo Tum Chupaake',
-  },
-  {
-    id: 'pyari-amaanat',
-    number: '05',
-    title: 'Pyari Amaanat',
-  },
-  {
-    id: 'gulabo',
-    number: '06',
-    title: 'Gulabo',
-  },
-]
-
-const experiences = [
-  {
-    id: 'live-performance',
-    number: '01',
-    icon: Mic2,
-    title: 'Live Performance',
-    description:
-      'A high-energy live set built around music, crowd interaction and the unmistakable personality Arpit brings to the stage.',
-  },
-  {
-    id: 'crowd-energy',
-    number: '02',
-    icon: Users,
-    title: 'Crowd Energy',
-    description:
-      'Sing-alongs, reactions and shared moments designed for an audience that wants to be part of the performance.',
-  },
-  {
-    id: 'culture-moments',
-    number: '03',
-    icon: Camera,
-    title: 'Culture Moments',
-    description:
-      'A night made to live beyond the venue through photographs, reels, crowd videos and memories.',
-  },
-  {
-    id: 'dkaos-experience',
-    number: '04',
+    id: 'status',
     icon: Sparkles,
-    title: 'DKAOS Experience',
-    description:
-      'Production, visual identity, audience experiences and cultural energy brought together under one DKAOS night.',
+    label: 'Status',
+    value: 'Upcoming',
+  },
+  {
+    id: 'experience',
+    icon: Users,
+    label: 'Experience',
+    value: 'Traditional Rave by KAOS',
   },
 ]
 
 /* =========================================================
-   ANIMATION
+   EVENT ARTWORK
+
+   Replace /brown2.png later if you create a new official
+   Brown Rang artwork.
+========================================================= */
+
+const media = [
+  {
+    id: 'brown-rang-01',
+    src: '/brown3.png',
+    alt: 'Brown Rang official event artwork',
+    type: 'photo',
+    size: 'large',
+  },
+]
+
+/* =========================================================
+   GENERAL ANIMATION
 ========================================================= */
 
 const fadeUp = {
@@ -159,26 +111,26 @@ const fadeUp = {
    PAGE
 ========================================================= */
 
-export default function ArtistOnePage() {
-  const videoSectionRef = useRef<HTMLElement>(null)
+export default function BrownRangPage() {
+  const heroRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
-  const [needsSoundInteraction, setNeedsSoundInteraction] = useState(false)
+  const [audioBlocked, setAudioBlocked] = useState(false)
+
+  const [selectedMedia, setSelectedMedia] = useState<
+    (typeof media)[number] | null
+  >(null)
 
   /* =========================================================
-     SCROLL PROGRESS
+     HERO SCROLL
   ========================================================= */
 
   const { scrollYProgress } = useScroll({
-    target: videoSectionRef,
+    target: heroRef,
     offset: ['start start', 'end end'],
   })
-
-  /* =========================================================
-     VIDEO EFFECTS
-  ========================================================= */
 
   const videoScale = useTransform(
     scrollYProgress,
@@ -188,157 +140,139 @@ export default function ArtistOnePage() {
 
   const videoOpacity = useTransform(
     scrollYProgress,
-    [0, 0.75, 1],
-    [1, 1, 0.35]
+    [0, 0.65, 1],
+    [1, 1, 0.25]
   )
 
-  const darkOverlayOpacity = useTransform(
+  const darkness = useTransform(
     scrollYProgress,
-    [0, 0.35, 0.7, 1],
-    [0.2, 0.3, 0.65, 0.9]
+    [0, 0.45, 1],
+    [0.15, 0.4, 0.9]
   )
 
-  /* =========================================================
-     OPENING TITLE
-  ========================================================= */
-
-  const heroOpacity = useTransform(
+  const titleOpacity = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.35],
+    [0, 0.2, 0.45],
     [1, 1, 0]
   )
 
-  const heroY = useTransform(
+  const titleY = useTransform(
     scrollYProgress,
-    [0, 0.35],
-    [0, -100]
+    [0, 0.45],
+    [0, -90]
   )
 
-  /* =========================================================
-     ARTIST STORY
-  ========================================================= */
-
-  const storyOpacity = useTransform(
+  const revealOpacity = useTransform(
     scrollYProgress,
-    [0.35, 0.52, 0.78, 0.92],
-    [0, 1, 1, 0]
-  )
-
-  const storyY = useTransform(
-    scrollYProgress,
-    [0.35, 0.55],
-    [100, 0]
-  )
-
-  /* =========================================================
-     FINAL VIDEO MESSAGE
-  ========================================================= */
-
-  const finalOpacity = useTransform(
-    scrollYProgress,
-    [0.78, 0.92],
+    [0.48, 0.72],
     [0, 1]
   )
 
-  const finalY = useTransform(
+  const revealY = useTransform(
     scrollYProgress,
-    [0.78, 0.95],
-    [70, 0]
+    [0.48, 0.8],
+    [80, 0]
   )
 
   /* =========================================================
-     AUTO PLAY / PAUSE
+     AUTOPLAY WITH SOUND
   ========================================================= */
 
   useEffect(() => {
-  const video = videoRef.current
+    const video = videoRef.current
 
-  if (!video) return
+    if (!video) return
 
-  const startVideo = async () => {
-    try {
-      // Try sound autoplay first
-      video.muted = false
-      video.volume = 1
+    let cancelled = false
 
-      await video.play()
-
-      setIsPlaying(true)
-      setIsMuted(false)
-      setNeedsSoundInteraction(false)
-    } catch {
-      // Browser blocked sound autoplay.
-      // Continue the cinematic video muted.
-      video.muted = true
-
+    const startWithSound = async () => {
       try {
+        video.muted = false
+        video.defaultMuted = false
+        video.volume = 1
+
         await video.play()
 
+        if (cancelled) return
+
         setIsPlaying(true)
-        setIsMuted(true)
-        setNeedsSoundInteraction(true)
+        setIsMuted(false)
+        setAudioBlocked(false)
       } catch {
-        setIsPlaying(false)
-        setNeedsSoundInteraction(true)
+        if (cancelled) return
+
+        video.muted = true
+        video.defaultMuted = true
+
+        try {
+          await video.play()
+
+          if (cancelled) return
+
+          setIsPlaying(true)
+          setIsMuted(true)
+          setAudioBlocked(true)
+        } catch {
+          if (cancelled) return
+
+          setIsPlaying(false)
+          setIsMuted(true)
+          setAudioBlocked(true)
+        }
       }
     }
-  }
 
-  startVideo()
-}, [])
+    startWithSound()
 
-const enterWithSound = async () => {
-  const video = videoRef.current
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
-  if (!video) return
+  /* =========================================================
+     ENABLE AUDIO ON FIRST INTERACTION
+  ========================================================= */
 
-  video.muted = false
-  video.volume = 1
-
-  try {
-    await video.play()
-
-    setIsMuted(false)
-    setIsPlaying(true)
-    setNeedsSoundInteraction(false)
-  } catch {
-    setIsPlaying(false)
-  }
-}
-  
   useEffect(() => {
-  const video = videoRef.current
+    if (!audioBlocked) return
 
-  if (!video) return
+    const enableAudio = async () => {
+      const video = videoRef.current
 
-  const startVideo = async () => {
-    try {
-      // First try autoplay WITH sound
-      video.muted = false
-      video.volume = 1
-
-      await video.play()
-
-      setIsPlaying(true)
-      setIsMuted(false)
-    } catch {
-      // Browser blocked autoplay with audio.
-      // Fall back to muted autoplay.
-      video.muted = true
+      if (!video) return
 
       try {
+        video.muted = false
+        video.defaultMuted = false
+        video.volume = 1
+
         await video.play()
 
         setIsPlaying(true)
-        setIsMuted(true)
+        setIsMuted(false)
+        setAudioBlocked(false)
       } catch {
-        setIsPlaying(false)
+        // Browser still blocked playback.
       }
     }
-  }
 
-  startVideo()
-}, [])
+    window.addEventListener('pointerdown', enableAudio, {
+      once: true,
+    })
+
+    window.addEventListener('keydown', enableAudio, {
+      once: true,
+    })
+
+    return () => {
+      window.removeEventListener('pointerdown', enableAudio)
+      window.removeEventListener('keydown', enableAudio)
+    }
+  }, [audioBlocked])
+
+  /* =========================================================
+     PAUSE VIDEO WHILE USER SCROLLS DOWN
+  ========================================================= */
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on(
@@ -348,12 +282,7 @@ const enterWithSound = async () => {
 
         if (!video) return
 
-        /*
-         * Keep video running through the cinematic portion.
-         * Pause near the end as the page transitions into content.
-         */
-
-        if (progress >= 0.84) {
+        if (progress >= 0.5) {
           if (!video.paused) {
             video.pause()
             setIsPlaying(false)
@@ -362,12 +291,7 @@ const enterWithSound = async () => {
           return
         }
 
-        /*
-         * If visitor scrolls upward again,
-         * resume the video.
-         */
-
-        if (progress <= 0.72 && video.paused) {
+        if (progress <= 0.25 && video.paused) {
           video
             .play()
             .then(() => {
@@ -421,55 +345,16 @@ const enterWithSound = async () => {
       <Navbar />
 
       {/* =====================================================
-          CINEMATIC VIDEO INTRO
+          CINEMATIC UPCOMING EVENT HERO
       ===================================================== */}
 
       <section
-        ref={videoSectionRef}
-        className="relative h-[260svh] bg-black"
+        ref={heroRef}
+        className="relative h-[190svh] bg-black"
       >
         <div className="sticky top-0 h-[100svh] overflow-hidden bg-black">
 
-          {needsSoundInteraction && (
-  <motion.button
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    type="button"
-    onClick={enterWithSound}
-    className="
-      absolute
-      left-1/2
-      top-1/2
-      z-[100]
-      -translate-x-1/2
-      -translate-y-1/2
-      rounded-full
-      border
-      border-white/20
-      bg-black/50
-      px-6
-      py-4
-      text-xs
-      font-black
-      uppercase
-      tracking-[0.22em]
-      text-white
-      backdrop-blur-xl
-      transition
-      hover:border-orange-500/50
-      hover:bg-orange-500
-      hover:text-black
-    "
-  >
-    <span className="flex items-center gap-3">
-      <Volume2 size={17} />
-      Enter With Sound
-    </span>
-  </motion.button>
-)}
-          {/* ================================================
-              VIDEO
-          ================================================= */}
+          {/* VIDEO */}
 
           <motion.div
             style={{
@@ -479,31 +364,24 @@ const enterWithSound = async () => {
             className="absolute inset-0"
           >
             <video
-  ref={videoRef}
-  src="/videos/arpit.mp4"
-  autoPlay
-  playsInline
-  loop
-  preload="metadata"
-  onPlay={() => setIsPlaying(true)}
-  onPause={() => setIsPlaying(false)}
-  className="
-    h-full
-    w-full
-    object-cover
-    object-center
-    max-sm:object-[50%_center]
-  "
-/>
+              ref={videoRef}
+              src="/videos/brownrangvid.mp4"
+              autoPlay
+              muted
+              playsInline
+              loop
+              preload="metadata"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              className="h-full w-full object-cover object-center"
+            />
           </motion.div>
 
-          {/* ================================================
-              CINEMATIC OVERLAYS
-          ================================================= */}
+          {/* DARKNESS */}
 
           <motion.div
             style={{
-              opacity: darkOverlayOpacity,
+              opacity: darkness,
             }}
             className="pointer-events-none absolute inset-0 bg-black"
           />
@@ -512,14 +390,16 @@ const enterWithSound = async () => {
 
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/20" />
 
-          {/* Orange atmosphere */}
+          {/* RED / ORANGE ATMOSPHERE */}
 
-          <div className="pointer-events-none absolute -right-48 top-[20%] h-[600px] w-[600px] rounded-full bg-orange-600/10 blur-[160px]" />
+          <div className="pointer-events-none absolute -right-40 top-[20%] h-[600px] w-[600px] rounded-full bg-red-600/10 blur-[160px]" />
 
-          {/* Subtle grid */}
+          <div className="pointer-events-none absolute -left-40 bottom-[10%] h-[450px] w-[450px] rounded-full bg-orange-600/[0.07] blur-[150px]" />
+
+          {/* SUBTLE GRID */}
 
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.025]"
+            className="pointer-events-none absolute inset-0 opacity-[0.02]"
             style={{
               backgroundImage:
                 'linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px)',
@@ -528,13 +408,13 @@ const enterWithSound = async () => {
           />
 
           {/* ================================================
-              BACK TO EVENTS
+              BACK BUTTON
           ================================================= */}
 
-          <div className="absolute left-5 top-24 z-40 sm:left-8 lg:left-12">
+          <div className="absolute left-5 top-24 z-50 sm:left-8 lg:left-12">
             <Link
               href="/events"
-              className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-white/45 transition hover:text-orange-500 sm:text-xs"
+              className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-white/50 transition hover:text-orange-500 sm:text-xs"
             >
               <ArrowLeft
                 size={15}
@@ -546,168 +426,89 @@ const enterWithSound = async () => {
           </div>
 
           {/* ================================================
-              FIRST SCREEN
+              INITIAL TITLE
           ================================================= */}
 
           <motion.div
             style={{
-              opacity: heroOpacity,
-              y: heroY,
-            }}
-            className="pointer-events-none absolute inset-0 z-10 flex items-end"
-          >
-            <div className="mx-auto w-full max-w-[1500px] px-5 pb-16 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
-              <div className="mb-5 flex items-center gap-3">
-                <span className="h-[1px] w-9 bg-orange-500 sm:w-12" />
-
-                <p className="text-[9px] font-black uppercase tracking-[0.35em] text-orange-500 sm:text-xs">
-                  DKAOS Presents
-                </p>
-              </div>
-
-              <h1 className="text-[13vw] font-black leading-[0.78] tracking-[-0.06em] sm:text-[10vw] md:text-[8vw] lg:text-[6.5rem] xl:text-[7.5rem]">
-  ARPIT
-
-  <span className="block text-orange-500">
-    BALA.
-  </span>
-</h1>
-
-              <div className="mt-8 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-white/45 sm:text-xs">
-                <ArrowDown
-                  size={5}
-                  className="animate-bounce text-orange-500"
-                />
-
-                Scroll To Enter
-              </div>
-            </div>
-          </motion.div>
-
-          {/* ================================================
-              SECOND SCREEN — ARTIST STORY
-          ================================================= */}
-
-          <motion.div
-            style={{
-              opacity: storyOpacity,
-              y: storyY,
+              opacity: titleOpacity,
+              y: titleY,
             }}
             className="pointer-events-none absolute inset-0 z-20 flex items-end"
           >
             <div className="mx-auto w-full max-w-[1500px] px-5 pb-16 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
-              <div className="max-w-5xl">
+
+              <div className="mb-5 flex items-center gap-3">
+                <span className="h-[1px] w-10 bg-orange-500" />
+
                 <p className="text-[9px] font-black uppercase tracking-[0.35em] text-orange-500 sm:text-xs">
-                  The Artist
+                  KAOS / Upcoming Experience
+                </p>
+              </div>
+
+             
+
+              <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+                <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/70 sm:text-base">
+                  A Traditional Rave Experience
                 </p>
 
-                <h2 className="mt-5 text-4xl font-black leading-[0.9] tracking-[-0.05em] sm:text-6xl lg:text-8xl">
-                  MUSIC.
-                  <br />
+                <span className="hidden h-1 w-1 rounded-full bg-orange-500 sm:block" />
 
-                  INTERNET
-                  <br />
-
-                  <span className="text-white/30">
-                    CULTURE.
-                  </span>
-                </h2>
-
-                <p className="mt-6 max-w-xl text-sm leading-6 text-white/55 sm:text-base sm:leading-7">
-                  A distinctive creative presence where music, personality
-                  and internet culture collide.
+                <p className="text-xs font-black uppercase tracking-[0.25em] text-orange-500">
+                  By KAOS
                 </p>
+              </div>
 
-                {/* Mini statistics */}
+              <p className="mt-5 max-w-lg text-sm leading-6 text-white/45 sm:text-base">
+                Tradition meets the underground. A night built around
+                sound, culture, colour and KAOS.
+              </p>
 
-                <div className="mt-8 flex flex-wrap gap-x-8 gap-y-5 sm:gap-x-12">
-                  <div>
-                    <p className="text-2xl font-black tracking-tight sm:text-3xl">
-                      2.8M+
-                    </p>
+              <div className="mt-8 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-white/45 sm:text-xs">
+                <ArrowDown
+                  size={14}
+                  className="animate-bounce text-orange-500"
+                />
 
-                    <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.2em] text-white/30 sm:text-[9px]">
-                      Monthly Listeners
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-2xl font-black tracking-tight sm:text-3xl">
-                      343M+
-                    </p>
-
-                    <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.2em] text-white/30 sm:text-[9px]">
-                      Catalog Streams
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-2xl font-black tracking-tight sm:text-3xl">
-                      360K+
-                    </p>
-
-                    <p className="mt-1 text-[8px] font-bold uppercase tracking-[0.2em] text-white/30 sm:text-[9px]">
-                      Spotify Followers
-                    </p>
-                  </div>
-                </div>
+                Discover Brown Rang
               </div>
             </div>
           </motion.div>
 
           {/* ================================================
-              THIRD SCREEN — FINAL REVEAL
+              CINEMATIC REVEAL
           ================================================= */}
 
           <motion.div
             style={{
-              opacity: finalOpacity,
-              y: finalY,
+              opacity: revealOpacity,
+              y: revealY,
             }}
             className="pointer-events-none absolute inset-0 z-30 flex items-center"
           >
             <div className="mx-auto w-full max-w-[1500px] px-5 sm:px-8 lg:px-12">
+
               <p className="text-[9px] font-black uppercase tracking-[0.35em] text-orange-500 sm:text-xs">
-                DKAOS × Arpit Bala
+                Something Different Is Coming.
               </p>
 
               <h2 className="mt-5 max-w-5xl text-5xl font-black leading-[0.88] tracking-[-0.055em] sm:text-7xl lg:text-9xl">
-                BHILAI,
+                DESI ROOTS.
                 <br />
 
-                <span className="text-white/30">
-                  YOUR TURN.
+                <span className="text-white/25">
+                  RAVE ENERGY.
                 </span>
               </h2>
 
-              <div className="mt-8 flex flex-wrap gap-x-7 gap-y-3 text-xs text-white/50 sm:text-sm">
-                <div className="flex items-center gap-2">
-                  <MapPin
-                    size={15}
-                    className="text-orange-500"
-                  />
-
-                  Bhilai, Chhattisgarh
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <CalendarDays
-                    size={15}
-                    className="text-orange-500"
-                  />
-
-                  Date Revealing Soon
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Zap
-                    size={15}
-                    className="text-orange-500"
-                  />
-
-                  Venue Revealing Soon
-                </div>
-              </div>
+              <p className="mt-7 max-w-lg text-sm leading-7 text-white/50 sm:text-base">
+                No date yet.
+                <br />
+                No venue yet.
+                <br />
+                Just know — Brown Rang is coming.
+              </p>
             </div>
           </motion.div>
 
@@ -716,6 +517,7 @@ const enterWithSound = async () => {
           ================================================= */}
 
           <div className="absolute bottom-5 right-5 z-50 flex gap-2 sm:bottom-7 sm:right-7">
+
             <button
               type="button"
               onClick={togglePlay}
@@ -741,9 +543,10 @@ const enterWithSound = async () => {
                 <Volume2 size={17} />
               )}
             </button>
+
           </div>
 
-          {/* Scroll progress */}
+          {/* SCROLL PROGRESS */}
 
           <motion.div
             style={{
@@ -751,226 +554,97 @@ const enterWithSound = async () => {
             }}
             className="absolute bottom-0 left-0 right-0 z-[60] h-[2px] origin-left bg-orange-500"
           />
+
         </div>
       </section>
 
       {/* =====================================================
-          EVENT INTRO
+          EXPERIENCE INTRODUCTION
       ===================================================== */}
 
       <section className="relative overflow-hidden px-5 py-20 sm:px-8 sm:py-28 lg:px-12 lg:py-36">
+
         <div className="pointer-events-none absolute -left-52 top-0 h-[500px] w-[500px] rounded-full bg-orange-600/[0.05] blur-[150px]" />
 
-        <div className="relative mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
+        <div className="relative mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.6fr_1.4fr] lg:gap-20">
+
           <motion.div {...fadeUp}>
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
-              Live In Bhilai
+              The Experience
             </p>
           </motion.div>
 
           <motion.div {...fadeUp}>
+
             <h2 className="max-w-5xl text-4xl font-black leading-[0.95] tracking-[-0.045em] sm:text-5xl lg:text-7xl">
-              ONE ARTIST.
-              <br />
-              ONE CROWD.
+              NOT JUST
               <br />
 
               <span className="text-white/25">
-                ONE NIGHT OF KAOS.
+                ANOTHER RAVE.
               </span>
             </h2>
 
             <div className="mt-10 grid gap-8 border-t border-white/10 pt-8 md:grid-cols-2">
-              <p className="text-sm leading-7 text-white/50 sm:text-base">
-                DKAOS brings Arpit Bala to Bhilai for a live experience
-                where music, internet culture and a crowd ready to sing
-                every word come together.
-              </p>
 
               <p className="text-sm leading-7 text-white/50 sm:text-base">
-                From crowd interaction to visual production and fan
-                experiences, the night is designed to feel bigger than
-                simply watching an artist perform.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          NUMBERS
-      ===================================================== */}
-
-      <section className="border-y border-white/[0.06] bg-[#0a0a0a] px-5 sm:px-8 lg:px-12">
-        <div className="mx-auto grid max-w-[1400px] sm:grid-cols-3">
-          {highlights.map((highlight, index) => {
-            const Icon = highlight.icon
-
-            return (
-              <div
-                key={highlight.id}
-                className="border-b border-white/[0.08] sm:border-b-0 sm:border-r"
-              >
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    y: 30,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                    amount: 0.15,
-                  }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.08,
-                  }}
-                  className="py-10 sm:px-7 sm:py-14 lg:px-10"
-                >
-                  <Icon
-                    size={20}
-                    className="mb-8 text-orange-500"
-                  />
-
-                  <p className="text-5xl font-black tracking-[-0.05em] sm:text-4xl lg:text-6xl">
-                    {highlight.value}
-                  </p>
-
-                  <p className="mt-3 text-xs uppercase tracking-[0.22em] text-white/35">
-                    {highlight.label}
-                  </p>
-                </motion.div>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="mx-auto max-w-[1400px] border-t border-white/[0.06] py-4">
-          <p className="text-[9px] leading-5 text-white/20">
-            Public streaming figures are indicative and may change over time.
-          </p>
-        </div>
-      </section>
-
-      {/* =====================================================
-          TRACKS
-      ===================================================== */}
-
-      <section className="px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
-        <div className="mx-auto max-w-[1400px]">
-          <motion.div
-            {...fadeUp}
-            className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
-          >
-            <div>
-              <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
-                The Sound
+                Brown Rang is a traditional rave experience by KAOS —
+                where Indian culture, raw aesthetics, music and nightlife
+                collide inside one atmosphere.
               </p>
 
-              <h2 className="text-4xl font-black tracking-[-0.045em] sm:text-5xl lg:text-7xl">
-                YOU KNOW
-                <br />
+              <p className="text-sm leading-7 text-white/50 sm:text-base">
+                Expect desi textures, underground energy, a carefully
+                built crowd and an experience designed to feel completely
+                different from an ordinary club night.
+              </p>
 
-                <span className="text-white/25">
-                  THE WORDS.
-                </span>
-              </h2>
             </div>
-
-            <p className="max-w-sm text-sm leading-6 text-white/35">
-              Some of the tracks that have become part of Arpit Bala&apos;s
-              growing music catalogue.
-            </p>
           </motion.div>
 
-          <div className="border-t border-white/10">
-            {tracks.map((track, index) => (
-              <div key={track.id}>
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    y: 20,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                    amount: 0.2,
-                  }}
-                  transition={{
-                    duration: 0.45,
-                    delay: index * 0.04,
-                  }}
-                  className="group flex items-center justify-between border-b border-white/10 py-5 transition-all duration-300 hover:px-3 sm:py-6"
-                >
-                  <div className="flex items-center gap-5 sm:gap-8">
-                    <span className="text-[10px] font-bold text-white/20">
-                      {track.number}
-                    </span>
-
-                    <h3 className="text-xl font-bold tracking-[-0.025em] transition group-hover:text-orange-500 sm:text-2xl">
-                      {track.title}
-                    </h3>
-                  </div>
-
-                  <Music2
-                    size={17}
-                    className="text-white/15 transition group-hover:text-orange-500"
-                  />
-                </motion.div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
       {/* =====================================================
-          EXPERIENCE
+          EVENT DETAILS
       ===================================================== */}
 
-      <section
-        id="experience"
-        className="border-y border-white/[0.06] bg-[#0a0a0a] px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
-      >
+      <section className="border-y border-white/[0.06] bg-[#0a0a0a] px-5 py-20 sm:px-8 sm:py-24 lg:px-12">
+
         <div className="mx-auto max-w-[1400px]">
+
           <motion.div
             {...fadeUp}
-            className="mb-14 max-w-4xl"
+            className="mb-12"
           >
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
-              The Night
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+              Event Details
             </p>
 
-            <h2 className="text-4xl font-black leading-[0.95] tracking-[-0.045em] sm:text-5xl lg:text-7xl">
-              DON&apos;T JUST
-              <br />
-              WATCH IT.
-              <br />
-
-              <span className="text-white/25">
-                BE IN IT.
-              </span>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] sm:text-5xl">
+              BROWN RANG
             </h2>
+
+            <p className="mt-3 max-w-xl text-sm leading-6 text-white/40">
+              The details stay hidden for now. Follow KAOS for the
+              official date, venue and access reveal.
+            </p>
           </motion.div>
 
           <div className="grid border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
-            {experiences.map((experience, index) => {
-              const Icon = experience.icon
+
+            {eventDetails.map((detail, index) => {
+              const Icon = detail.icon
 
               return (
                 <div
-                  key={experience.id}
+                  key={detail.id}
                   className="border-b border-r border-white/10"
                 >
                   <motion.div
                     initial={{
                       opacity: 0,
-                      y: 30,
+                      y: 25,
                     }}
                     whileInView={{
                       opacity: 1,
@@ -978,238 +652,241 @@ const enterWithSound = async () => {
                     }}
                     viewport={{
                       once: true,
-                      amount: 0.15,
+                      amount: 0.2,
                     }}
                     transition={{
-                      duration: 0.6,
-                      delay: index * 0.07,
+                      duration: 0.5,
+                      delay: index * 0.06,
                     }}
-                    className="group min-h-[300px] p-7 transition-colors duration-300 hover:bg-white/[0.025] lg:min-h-[350px] lg:p-8"
+                    className="min-h-[200px] p-7 lg:p-8"
                   >
-                    <div className="flex items-center justify-between">
-                      <Icon
-                        size={25}
-                        strokeWidth={1.5}
-                        className="text-orange-500"
-                      />
+                    <Icon
+                      size={21}
+                      className="text-orange-500"
+                    />
 
-                      <span className="text-[10px] font-bold text-white/20">
-                        {experience.number}
-                      </span>
-                    </div>
+                    <p className="mt-12 text-[9px] font-bold uppercase tracking-[0.25em] text-white/25">
+                      {detail.label}
+                    </p>
 
-                    <div className="mt-16 lg:mt-28">
-                      <h3 className="text-xl font-bold sm:text-2xl">
-                        {experience.title}
-                      </h3>
+                    <p className="mt-2 text-lg font-bold">
+                      {detail.value}
+                    </p>
 
-                      <p className="mt-4 text-sm leading-6 text-white/40">
-                        {experience.description}
-                      </p>
-                    </div>
                   </motion.div>
                 </div>
               )
             })}
+
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          EVENT REVEAL
+          BROWN RANG CONCEPT
       ===================================================== */}
 
-      <section className="px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
-        <motion.div
-          {...fadeUp}
-          className="relative mx-auto min-h-[500px] max-w-[1400px] overflow-hidden rounded-[30px] border border-white/10 bg-[#0d0d0d] p-7 sm:p-12 lg:p-16"
-        >
-          {/* Background text */}
+      <section
+        id="experience"
+        className="px-5 pb-10 pt-24 sm:px-8 sm:pb-14 sm:pt-32 lg:px-12"
+      >
+        <div className="mx-auto max-w-[1400px]">
 
-          <div className="pointer-events-none absolute -bottom-10 -right-5 select-none text-[150px] font-black leading-none tracking-[-0.08em] text-white/[0.025] sm:text-[260px] lg:text-[350px]">
-            KAOS
-          </div>
+          <motion.div
+            {...fadeUp}
+            className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"
+          >
 
-          {/* Glow */}
-
-          <div className="pointer-events-none absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-orange-600/10 blur-[140px]" />
-
-          <div className="relative z-10 flex min-h-[370px] flex-col justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
-                Event Information
-              </p>
+              <div className="flex items-center gap-3">
 
-              <h2 className="mt-5 text-4xl font-black leading-[0.95] tracking-[-0.045em] sm:text-5xl lg:text-7xl">
-                BHILAI,
+                <Sparkles
+                  size={16}
+                  className="text-orange-500"
+                />
+
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+                  Brown Rang
+                </p>
+
+              </div>
+
+              <h2 className="mt-5 text-5xl font-black leading-[0.9] tracking-[-0.05em] sm:text-6xl lg:text-8xl">
+                TRADITION
                 <br />
 
                 <span className="text-white/25">
-                  GET READY.
+                  AFTER DARK.
                 </span>
               </h2>
-
-              <p className="mt-6 max-w-xl text-sm leading-7 text-white/40 sm:text-base">
-                Date, venue and ticket information will be revealed through
-                official DKAOS channels.
-              </p>
             </div>
 
-            <div className="mt-14 grid gap-7 sm:grid-cols-3">
-              <div className="border-t border-white/10 pt-5">
-                <MapPin
-                  size={18}
-                  className="mb-4 text-orange-500"
-                />
+            <p className="max-w-sm text-sm leading-7 text-white/40">
+              A collision of desi identity, retro visual culture,
+              underground sound and the unmistakable energy of KAOS.
+            </p>
 
-                <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/25">
-                  City
-                </p>
-
-                <p className="mt-2 font-semibold">
-                  Bhilai, Chhattisgarh
-                </p>
-              </div>
-
-              <div className="border-t border-white/10 pt-5">
-                <CalendarDays
-                  size={18}
-                  className="mb-4 text-orange-500"
-                />
-
-                <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/25">
-                  Date
-                </p>
-
-                <p className="mt-2 font-semibold">
-                  Revealing Soon
-                </p>
-              </div>
-
-              <div className="border-t border-white/10 pt-5">
-                <Zap
-                  size={18}
-                  className="mb-4 text-orange-500"
-                />
-
-                <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/25">
-                  Venue
-                </p>
-
-                <p className="mt-2 font-semibold">
-                  Revealing Soon
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* =====================================================
-          SAFETY STRIP
-      ===================================================== */}
-
-      <section className="border-y border-white/[0.06] bg-[#0a0a0a] px-5 py-16 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-[1400px]">
-          <motion.div
-            {...fadeUp}
-            className="flex flex-col justify-between gap-8 md:flex-row md:items-center"
-          >
-            <div className="flex items-start gap-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04]">
-                <ShieldCheck
-                  size={21}
-                  className="text-orange-500"
-                />
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold">
-                  Good Kaos. Safe Kaos.
-                </h3>
-
-                <p className="mt-2 max-w-xl text-sm leading-6 text-white/40">
-                  Check event entry, venue and safety policies before
-                  attending.
-                </p>
-              </div>
-            </div>
-
-            <Link
-              href="/rules"
-              className="group flex w-fit items-center gap-3 text-sm font-semibold text-white/60 transition hover:text-orange-500"
-            >
-              Event Rules
-
-              <ArrowRight
-                size={15}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </Link>
           </motion.div>
+
         </div>
       </section>
 
       {/* =====================================================
-          SPONSOR CTA
+          OFFICIAL ARTWORK
+      ===================================================== */}
+
+      <section className="px-5 pb-24 sm:px-8 sm:pb-32 lg:px-12">
+
+        <div className="mx-auto max-w-[1400px]">
+
+          <motion.button
+            {...fadeUp}
+            type="button"
+            onClick={() => setSelectedMedia(media[0])}
+            className="group relative block h-[55svh] min-h-[450px] w-full overflow-hidden rounded-[24px] border border-white/10 text-left sm:h-[70svh] lg:rounded-[32px]"
+          >
+
+            <Image
+              src={media[0].src}
+              alt={media[0].alt}
+              fill
+              sizes="100vw"
+              className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/10" />
+
+            <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between sm:bottom-8 sm:left-8 sm:right-8">
+
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-orange-500">
+                  Brown Rang / KAOS
+                </p>
+
+                <p className="mt-2 text-xl font-bold sm:text-2xl">
+                  Official Artwork
+                </p>
+              </div>
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/30 backdrop-blur-xl transition group-hover:bg-white group-hover:text-black">
+                <Expand size={17} />
+              </div>
+
+            </div>
+
+          </motion.button>
+
+        </div>
+      </section>
+
+      {/* =====================================================
+          TEASER STATEMENT
+      ===================================================== */}
+
+      <section className="border-y border-white/[0.06] bg-[#0a0a0a] px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+
+        <motion.div
+          {...fadeUp}
+          className="mx-auto max-w-[1400px]"
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+            KAOS Presents
+          </p>
+
+          <h2 className="mt-7 max-w-6xl text-5xl font-black leading-[0.92] tracking-[-0.05em] sm:text-6xl lg:text-8xl">
+            THE DATE ISN&apos;T OUT.
+            <br />
+
+            <span className="text-white/20">
+              THE HYPE IS.
+            </span>
+          </h2>
+
+          <div className="mt-10 h-[1px] max-w-xl bg-gradient-to-r from-orange-500/80 to-transparent" />
+
+          <p className="mt-8 max-w-xl text-sm leading-7 text-white/40 sm:text-base">
+            The next chapter of KAOS is taking shape.
+            Details drop when the time is right.
+          </p>
+        </motion.div>
+
+      </section>
+
+      {/* =====================================================
+          FINAL CTA
       ===================================================== */}
 
       <section className="px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+
         <motion.div
           {...fadeUp}
-          className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[30px] bg-orange-500 p-7 text-black sm:p-10 lg:p-14"
+          className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[30px] bg-orange-500 p-7 text-black sm:p-12 lg:p-16"
         >
-          <div className="pointer-events-none absolute -right-16 -top-20 select-none text-[220px] font-black leading-none text-black/[0.05]">
-            D
+
+          <div className="pointer-events-none absolute -bottom-20 -right-10 select-none text-[250px] font-black leading-none text-black/[0.05]">
+            K
           </div>
 
           <div className="relative z-10 flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
+
             <div>
+
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-black/50">
-                Brands × DKAOS
+                Date & Venue Revealing Soon
               </p>
 
-              <h2 className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] tracking-[-0.05em] sm:text-5xl lg:text-7xl">
-                PUT YOUR BRAND
+              <h2 className="mt-4 max-w-4xl text-4xl font-black leading-[0.93] tracking-[-0.05em] sm:text-5xl lg:text-7xl">
+                DON&apos;T HEAR
                 <br />
-                INSIDE THE MOMENT.
+                ABOUT IT LATE.
               </h2>
 
-              <p className="mt-6 max-w-xl text-sm leading-6 text-black/60">
-                Partner with DKAOS through event visibility, experiences,
-                activations and audience engagement.
+              <p className="mt-5 max-w-lg text-sm font-medium leading-6 text-black/55">
+                Follow KAOS for the first date, venue and access
+                announcement for Brown Rang.
               </p>
+
             </div>
 
-            <Link
-              href="/sponsors"
+            <a
+              href="https://www.instagram.com/da.ka0s"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group flex w-fit items-center gap-3 rounded-full bg-black px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white hover:text-black"
             >
-              Sponsorships
+              <Instagram size={17} />
+
+              Follow @da.ka0s
 
               <ArrowRight
                 size={16}
                 className="transition-transform group-hover:translate-x-1"
               />
-            </Link>
+            </a>
+
           </div>
         </motion.div>
+
       </section>
 
       {/* =====================================================
-          FOLLOW
+          INSTAGRAM
       ===================================================== */}
 
       <section className="border-t border-white/[0.06] px-5 py-20 sm:px-8 lg:px-12">
+
         <div className="mx-auto flex max-w-[1400px] flex-col gap-10 sm:flex-row sm:items-center sm:justify-between">
+
           <motion.div {...fadeUp}>
+
             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-orange-500">
-              Follow The Kaos
+              Stay Connected
             </p>
 
             <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
-              DON&apos;T MISS THE REVEAL.
+              FOLLOW THE KAOS.
             </h2>
+
           </motion.div>
 
           <motion.a
@@ -1230,7 +907,9 @@ const enterWithSound = async () => {
               size={15}
               className="text-white/30 transition-transform group-hover:translate-x-1"
             />
+
           </motion.a>
+
         </div>
       </section>
 
@@ -1239,13 +918,17 @@ const enterWithSound = async () => {
       ===================================================== */}
 
       <footer className="border-t border-white/[0.06] bg-[#050505] px-5 pb-8 pt-16 sm:px-8 lg:px-12">
+
         <div className="mx-auto max-w-[1400px]">
+
           <p className="text-[19vw] font-black leading-[0.7] tracking-[-0.075em] sm:text-[15vw] lg:text-[9rem]">
             D<span className="text-orange-500">KAOS</span>
           </p>
 
           <div className="mt-14 flex flex-col gap-8 border-t border-white/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
+
             <div className="flex flex-wrap gap-x-6 gap-y-3 text-xs text-white/40">
+
               <Link
                 href="/"
                 className="transition hover:text-white"
@@ -1280,18 +963,57 @@ const enterWithSound = async () => {
               >
                 Rules
               </Link>
+
             </div>
 
             <p className="text-[10px] uppercase tracking-[0.25em] text-white/20">
               Culture × Crowd × Kaos
             </p>
+
           </div>
 
           <div className="mt-8 text-[10px] text-white/20">
             © 2026 DKAOS. All rights reserved.
           </div>
+
         </div>
       </footer>
+
+      {/* =====================================================
+          ARTWORK LIGHTBOX
+      ===================================================== */}
+
+      {selectedMedia && (
+        <div
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/95 p-4 backdrop-blur-xl sm:p-8"
+          onClick={() => setSelectedMedia(null)}
+        >
+
+          <button
+            type="button"
+            onClick={() => setSelectedMedia(null)}
+            aria-label="Close image"
+            className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/40 transition hover:bg-white hover:text-black sm:right-8 sm:top-8"
+          >
+            <X size={18} />
+          </button>
+
+          <div
+            className="relative h-[80svh] w-full max-w-6xl overflow-hidden rounded-[20px]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Image
+              src={selectedMedia.src}
+              alt={selectedMedia.alt}
+              fill
+              sizes="100vw"
+              className="object-contain"
+            />
+          </div>
+
+        </div>
+      )}
+
     </main>
   )
 }

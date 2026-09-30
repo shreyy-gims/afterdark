@@ -11,6 +11,7 @@ import {
   Instagram,
   MapPin,
   Music2,
+  ArrowUpRight,
   ShieldCheck,
   Sparkles,
   Users,
@@ -62,12 +63,32 @@ const upcomingEvents = [
   {
     id: 'arpit-bala-bhilai-2026',
     status: 'UP NEXT',
-    title: 'REVEALING SOON..',
+    title: '',
     subtitle: 'LIVE IN BHILAI',
     location: 'Bhilai, Chhattisgarh',
     date: 'Coming Soon',
-    image: '/arpitbalablur.jpg',
+    image: '/brown2.png',
     href: '/events/artist1',
+  },
+]
+const pastEvents = [
+  {
+    id: 'noctra',
+    title: '',
+    subtitle: 'BY DKAOS',
+    location: 'Bhilai, Chhattisgarh',
+    date: '2026',
+    image: '/spiderverse.jpeg',
+    href: '/events/noctra',
+  },
+  {
+    id: 'cl6',
+    title: '',
+    subtitle: 'BY DKAOS',
+    location: 'Bhilai, Chhattisgarh',
+    date: '2026',
+    image: '/raftaar.jpeg',
+    href: '/events/cl6',
   },
 ]
 
@@ -398,16 +419,141 @@ export default function Home() {
 
           {/* Mobile all events */}
 
-          <Link
-            href="/events"
-            className="mt-6 flex items-center justify-between border-b border-white/10 py-4 text-sm text-white/60 sm:hidden"
-          >
-            Explore All Events
-
-            <ArrowRight size={16} />
-          </Link>
+          
         </div>
       </section>
+
+      {/* =====================================================
+    PAST EVENTS
+===================================================== */}
+
+<section className="px-5 pb-20 pt-4 sm:px-8 sm:pb-28 lg:px-12">
+  <div className="mx-auto max-w-[1400px]">
+
+    {/* Header */}
+
+    <motion.div
+      {...fadeUp}
+      className="mb-10 flex items-end justify-between"
+    >
+      <div>
+        <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-orange-500">
+          The Archive
+        </p>
+
+        <h2 className="text-4xl font-black tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+          PAST EVENTS.
+        </h2>
+
+        <p className="mt-4 max-w-lg text-sm leading-6 text-white/40">
+          Nights we built. Crowds that showed up.
+          Moments that became part of DKAOS.
+        </p>
+      </div>
+    </motion.div>
+
+    {/* Past Event Cards */}
+
+    <div className="grid gap-5 md:grid-cols-2">
+      {pastEvents.map((event, index) => (
+        <motion.article
+          key={event.id}
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          transition={{
+            duration: 0.6,
+            delay: index * 0.08,
+          }}
+          className="group relative min-h-[480px] overflow-hidden rounded-[26px] border border-white/10 bg-[#0a0a0a] sm:min-h-[560px] lg:rounded-[32px]"
+        >
+          {/* Event Image */}
+
+          <Image
+            src={event.image}
+            alt={event.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover object-center transition-transform duration-[1200ms] group-hover:scale-[1.04]"
+          />
+
+          {/* Overlays */}
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10" />
+
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
+
+          {/* Past Event Badge */}
+
+          <div className="absolute left-5 top-5 sm:left-7 sm:top-7">
+            <span className="rounded-full border border-white/15 bg-black/30 px-4 py-2 text-[9px] font-bold uppercase tracking-[0.25em] text-white/60 backdrop-blur-xl">
+              Past Event
+            </span>
+          </div>
+
+          {/* Content */}
+
+          <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+
+            <h3 className="text-5xl font-black leading-none tracking-[-0.05em] sm:text-6xl lg:text-7xl">
+              {event.title}
+            </h3>
+
+            <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.25em] text-orange-500">
+              {event.subtitle}
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-xs text-white/50 sm:text-sm">
+
+              <div className="flex items-center gap-2">
+                <MapPin
+                  size={14}
+                  className="text-orange-500"
+                />
+
+                {event.location}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <CalendarDays
+                  size={14}
+                  className="text-orange-500"
+                />
+
+                {event.date}
+              </div>
+
+            </div>
+
+            <Link
+              href={event.href}
+              className="group/button mt-7 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.08] px-5 py-3 text-xs font-semibold backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-black sm:text-sm"
+            >
+              Explore Event
+
+              <ArrowRight
+                size={15}
+                className="transition-transform duration-300 group-hover/button:translate-x-1"
+              />
+            </Link>
+
+          </div>
+
+        </motion.article>
+      ))}
+    </div>
+
+  </div>
+</section>
 
       {/* =====================================================
           EXPERIENCE
@@ -733,11 +879,41 @@ export default function Home() {
 
           {/* Footer bottom */}
 
-          <div className="mt-20 flex flex-col gap-4 border-t border-white/10 pt-7 text-[11px] text-white/25 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 DKAOS. All rights reserved.</p>
+          {/* Footer bottom */}
 
-            <p>Culture × Crowd × Kaos</p>
-          </div>
+<div className="mt-20 flex flex-col gap-5 border-t border-white/10 pt-7 text-[11px] text-white/25 sm:flex-row sm:items-center sm:justify-between">
+
+  {/* Copyright */}
+  <p>© 2026 DKAOS. All rights reserved.</p>
+
+  {/* Right side */}
+  <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+
+    <p>Culture × Crowd × Kaos</p>
+
+    <span className="hidden h-3 w-px bg-white/15 sm:block" />
+
+    <a
+      href="https://anshhh-inky.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group inline-flex items-center gap-1.5 text-white/35 transition-colors duration-300 hover:text-orange-500"
+    >
+      <span>Developed by</span>
+
+      <span className="font-semibold text-white/60 transition-colors duration-300 group-hover:text-orange-500">
+        anshhh
+      </span>
+
+      <ArrowUpRight
+        size={12}
+        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+      />
+    </a>
+
+  </div>
+
+</div>
         </div>
       </footer>
     </main>
