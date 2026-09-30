@@ -365,7 +365,7 @@ export default function BrownRangPage() {
           >
             <video
               ref={videoRef}
-              src="/videos/brownrangvid.mp4"
+              src="/videos/brownrangvid1.mp4"
               autoPlay
               muted
               playsInline
